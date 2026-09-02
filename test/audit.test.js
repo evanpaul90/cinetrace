@@ -13,6 +13,8 @@ import { ready as defaultReady } from '../src/default-adapter.js';
 
 const fixtureDir = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures');
 const adapterPath = path.join(fixtureDir, 'fixture-adapter.js');
+const prepareAdapterPath = path.join(fixtureDir, 'prepare-adapter.js');
+const latePrepareAdapterPath = path.join(fixtureDir, 'late-prepare-adapter.js');
 let origin;
 let server;
 let tempRoot;
@@ -185,6 +187,43 @@ test('default readiness completes promptly while a network response remains open
   } finally {
     await browser.close();
   }
+});
+
+test('optional adapter prepare runs before navigation in primary and reduced-motion pages', async () => {
+  const result = await runFixture('prepare-seeded', {
+    adapterPath: prepareAdapterPath,
+    outDir: path.join(tempRoot, 'prepare-seeded-clean'),
+    steps: [0, 1],
+    controlRuns: 2,
+  });
+  assert.equal(result.verdict.pass, true, JSON.stringify(result.defects));
+  assert.equal(result.controls.pass, true, JSON.stringify(result.controls.runs));
+  assert.equal(result.viewports[0].checks.reducedMotion.pass, true);
+  assert.ok(result.viewports[0].frames.every((frame) => frame.state.preparedAtDocumentStart === true));
+  assert.ok(result.viewports[0].frames.every((frame) => frame.state.bootSeed === 0.3141592653589793));
+});
+
+test('planting the deterministic patch after navigation cannot impersonate prepare', async () => {
+  const result = await runFixture('prepare-seeded', {
+    adapterPath: latePrepareAdapterPath,
+    outDir: path.join(tempRoot, 'prepare-seeded-late'),
+    steps: [0, 1],
+    controlRuns: 2,
+  });
+  assert.ok(result.viewports[0].frames.every((frame) => frame.state.preparedAtDocumentStart === false));
+  assert.equal(result.viewports[0].checks.reducedMotion.pass, false);
+  assert.ok(result.defects.some((defect) => defect.code === 'REDUCED_MOTION_UNSAFE'));
+  assert.equal(result.controls.pass, false);
+  assert.ok(result.defects.some((defect) => defect.code === 'CONTROL_DRIFT'));
+});
+
+test('an existing adapter without prepare remains compatible', async () => {
+  const result = await runFixture('clean', {
+    adapterPath,
+    outDir: path.join(tempRoot, 'adapter-without-prepare'),
+    steps: [0, 1],
+  });
+  assert.equal(result.verdict.pass, true, JSON.stringify(result.defects));
 });
 
 test('accepts configurable semantic and primary-action selectors in rendered and no-JS routes', async () => {

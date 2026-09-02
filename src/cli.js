@@ -19,7 +19,7 @@ Options:
   --reduced-motion           Explicitly enable reduced-motion verification
   --browser <engine>         chromium, firefox, or webkit
   --control-runs <count>     Same-build deterministic repetitions (1-5)
-  --adapter <file>           ESM adapter exporting ready/setProgress/readState
+  --adapter <file>           ESM adapter: [prepare,] ready/setProgress/readState
   --primary-action <css>     Rendered primary-action selector
   --no-js-primary-action <css>
                              No-JS primary-action selector

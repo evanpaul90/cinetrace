@@ -74,6 +74,12 @@ Every report records browser engine and version, operating-system platform, arch
 For a custom experience, pass an ESM module:
 
 ```js
+export async function prepare(page) {
+  await page.addInitScript(() => {
+    Math.random = () => 0.3141592653589793;
+  });
+}
+
 export async function ready(page) {
   await page.waitForFunction(() => window.sceneReady === true);
 }
@@ -89,7 +95,9 @@ export async function readState(page) {
 
 Then run with `--adapter ./cinetrace-adapter.js`. `readState` must return JSON-serializable, deterministic state. CineTrace hashes stable key-sorted state at every checkpoint and compares the forward and reverse readings.
 
-Adapter methods receive an optional final context argument for direction and progress, but portable adapters should not need it. CineTrace does not assume any framework, WebGL engine, geometry, or project-specific debug surface.
+`prepare(page)` is optional. CineTrace calls it after creating each primary or reduced-motion page and before `page.goto`, including every same-build control run. Use it for `page.addInitScript(...)` setup such as deterministic randomness, clocks, or public test seams that must exist before application code runs. A patch installed in `ready(page)` is too late for values captured during initial document execution. The forced-WebGL and no-JavaScript checks remain independent fallback oracles and do not run the project adapter.
+
+Adapter methods receive an optional final context argument. `prepare` receives `{ mode, viewport }`; progress methods receive direction and progress. Portable adapters should not need the context. Existing adapters that export only `ready`, `setProgress`, and `readState` remain compatible. This lifecycle addition does not change the CLI option shape, report JSON, or report schema. CineTrace does not assume any framework, WebGL engine, geometry, or project-specific debug surface.
 
 ## Programmatic API
 

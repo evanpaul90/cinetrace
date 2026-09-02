@@ -22,7 +22,14 @@ async function loadAdapter(adapterPath) {
       throw new TypeError(`Adapter ${absolute} must export async ${method}(page, ...)`);
     }
   }
+  if (adapter.prepare !== undefined && typeof adapter.prepare !== 'function') {
+    throw new TypeError(`Adapter ${absolute} prepare export must be an async function when provided`);
+  }
   return adapter;
+}
+
+async function prepareAdapterPage(adapter, page, context) {
+  if (typeof adapter.prepare === 'function') await adapter.prepare(page, context);
 }
 
 async function settle(page, delayMs) {
@@ -249,6 +256,7 @@ async function inspectReducedMotion(browser, url, viewport, adapter, timeoutMs, 
   registerErrors(page, errors);
   let response;
   try {
+    await prepareAdapterPage(adapter, page, { mode: 'reduced-motion', viewport });
     response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: timeoutMs });
     await adapter.ready(page);
     await adapter.setProgress(page, 0.5, { direction: 'forward', reducedMotion: true });
@@ -556,6 +564,7 @@ export async function auditTarget(input = {}) {
       let initialAudit = null;
       let keyboardReachability = { pass: false, selector: options.primaryActionSelector, targetCount: 0, focusableCount: 0, tabsRequired: null, maxTabs: 0 };
       try {
+        await prepareAdapterPage(adapter, page, { mode: 'primary', viewport });
         response = await page.goto(options.url, { waitUntil: 'domcontentloaded', timeout: options.timeoutMs });
         await adapter.ready(page);
         initialAudit = await inspectDocument(

@@ -4,7 +4,7 @@ Verified locally on 2 September 2026 against CineTrace 0.3.0. This record contai
 
 ## Release-bar mutation corpus
 
-`npm test` completed 27 tests with 27 passes and 0 failures in 14.28 seconds.
+`npm test` completed 30 tests with 30 passes and 0 failures in 16.01 seconds.
 
 The corpus proves deliberate failures for:
 
@@ -17,11 +17,14 @@ The corpus proves deliberate failures for:
 - broken forced-WebGL fallback;
 - ignored reduced-motion preference;
 - nondeterministic same-build control drift;
+- a document-start preparation patch planted too late in `ready(page)`, which remains nondeterministic and leaves unsafe reduced motion active;
 - a late scroll-geometry rewrite after traversal has begun;
 - malformed progress, timing and viewport configuration;
 - screenshot-path collisions.
 
-The controls prove that clipped decoration does not become false root overflow, handled renderer console diagnostics do not become fatal fallback errors, and a long-lived network response does not delay default readiness.
+The controls prove that clipped decoration does not become false root overflow, handled renderer console diagnostics do not become fatal fallback errors, a long-lived network response does not delay default readiness, and an adapter without the optional `prepare(page)` hook remains compatible.
+
+The clean preparation fixture also proves that `prepare(page)` runs before document scripts in both primary and reduced-motion pages. Its init script fixes the boot seed at `0.3141592653589793`; every captured state reports the same seed, reduced motion passes, and two same-build fingerprints match. The report schema remains 2.0.0 because the lifecycle hook changes adapter execution only, not the output contract.
 
 ## Same-build clean control
 
