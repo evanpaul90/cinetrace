@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Inspect a real CineTrace forward/reverse production audit and its raw evidence.">
+  <meta name="theme-color" content="#07161d">
+  <title>CineTrace / production filmstrip</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --night: #07161d;
+      --deep: #0b2229;
+      --paper: #e8efe9;
+      --fog: #9bb1ae;
+      --cyan: #83d7d0;
+      --amber: #f2ba55;
+      --line: rgba(211, 235, 229, .18);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--night);
+      color: var(--paper);
+      font: 16px/1.55 "Avenir Next", Avenir, "Segoe UI", sans-serif;
+    }
+    a { color: inherit; }
+    a:focus-visible { outline: 3px solid var(--amber); outline-offset: 4px; }
+    header, main, footer { width: min(1180px, calc(100% - 40px)); margin-inline: auto; }
+    header { padding: clamp(42px, 8vw, 104px) 0 42px; }
+    .eyebrow, .meta, .counter, code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+    .eyebrow { color: var(--cyan); font-size: .76rem; letter-spacing: .19em; text-transform: uppercase; }
+    h1 {
+      max-width: 12ch;
+      margin: 20px 0 24px;
+      font: 750 clamp(3.3rem, 10vw, 8.8rem)/.84 "Arial Narrow", "Avenir Next Condensed", sans-serif;
+      letter-spacing: -.055em;
+    }
+    .lede { max-width: 680px; margin: 0; color: var(--fog); font-size: clamp(1.05rem, 2vw, 1.35rem); }
+    .proofline { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
+    .proofline a, .proofline span {
+      border: 1px solid var(--line);
+      padding: 9px 13px;
+      text-decoration: none;
+      font: 700 .7rem/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .proofline a:hover { border-color: var(--cyan); color: var(--cyan); }
+    .reel-shell { border-block: 1px solid var(--line); padding: 30px 0 38px; }
+    .reel-head { display: flex; justify-content: space-between; gap: 24px; align-items: end; margin-bottom: 18px; }
+    .reel-head h2 { margin: 0; font-size: clamp(1.5rem, 4vw, 2.4rem); letter-spacing: -.035em; }
+    .counter { color: var(--amber); font-size: .76rem; letter-spacing: .1em; }
+    .reel {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(320px, 67vw);
+      gap: 14px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+      scroll-snap-type: inline mandatory;
+      scrollbar-color: var(--amber) var(--deep);
+      padding-bottom: 18px;
+    }
+    figure { position: relative; margin: 0; background: var(--deep); scroll-snap-align: start; }
+    figure img { display: block; width: 100%; aspect-ratio: 8/5; object-fit: cover; }
+    figcaption {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 13px 15px;
+      color: var(--fog);
+      font: .72rem/1.35 "SFMono-Regular", Consolas, monospace;
+    }
+    figcaption strong { color: var(--paper); font-weight: 600; }
+    .direction {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      margin-top: 16px;
+      color: var(--fog);
+      font: .68rem/1 "SFMono-Regular", Consolas, monospace;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .direction::before { content: ""; height: 1px; background: linear-gradient(90deg, var(--cyan), var(--amber)); }
+    .direction b { color: var(--paper); font-weight: 600; }
+    .evidence { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(30px, 7vw, 100px); padding: 70px 0 90px; }
+    .evidence h2 { max-width: 12ch; margin: 0; font-size: clamp(2.4rem, 6vw, 5rem); line-height: .95; letter-spacing: -.05em; }
+    .evidence p { color: var(--fog); }
+    .checks { list-style: none; padding: 0; margin: 28px 0 0; border-top: 1px solid var(--line); }
+    .checks li { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .checks b { color: var(--cyan); font: 700 .7rem/1.5 "SFMono-Regular", Consolas, monospace; text-transform: uppercase; }
+    .downloads { display: grid; gap: 10px; margin-top: 24px; }
+    .downloads a { padding: 15px 16px; background: var(--paper); color: var(--night); text-decoration: none; font-weight: 750; }
+    .downloads a:hover { background: var(--cyan); }
+    footer { border-top: 1px solid var(--line); padding: 28px 0 50px; color: var(--fog); font-size: .84rem; }
+    @media (max-width: 760px) {
+      header, main, footer { width: min(100% - 24px, 1180px); }
+      h1 { font-size: clamp(3.1rem, 18vw, 5.3rem); }
+      .reel { grid-auto-columns: 88vw; }
+      .evidence { grid-template-columns: 1fr; }
+      .reel-head { align-items: start; flex-direction: column; }
+      .direction { grid-template-columns: 1fr 1fr; }
+      .direction::before { display: none; }
+      .direction b { grid-column: 1 / -1; grid-row: 1; }
+      .direction span:last-child { text-align: right; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">CineTrace / recorded 02 Sep 2026</div>
+    <h1>One journey. Both directions.</h1>
+    <p class="lede">A real production filmstrip from five sampled states. CineTrace replayed the same scroll-driven WebGL experience forward and reverse, then repeated the entire audit in a fresh browser context.</p>
+    <div class="proofline">
+      <span>0 defects</span><span>2 controls</span><span>40 PNG captures</span>
+      <a href="https://github.com/evanpaul90/cinetrace">Source on GitHub</a>
+    </div>
+  </header>
+  <main>
+    <section class="reel-shell" aria-labelledby="reel-title">
+      <div class="reel-head">
+        <h2 id="reel-title">Forward control / desktop</h2>
+        <div class="counter">fingerprint 1273464af6848e6b</div>
+      </div>
+      <div class="reel" aria-label="Five captured progress states">
+        <figure><img src="assets/frame-0.webp" alt="Odessis harbour scene at 0 percent progress" width="960" height="600"><figcaption><strong>Harbour road</strong><span>0%</span></figcaption></figure>
+        <figure><img src="assets/frame-0_25.webp" alt="Odessis city scene at 25 percent progress" width="960" height="600" loading="lazy"><figcaption><strong>Stoa approach</strong><span>25%</span></figcaption></figure>
+        <figure><img src="assets/frame-0_5.webp" alt="Odessis agora scene at 50 percent progress" width="960" height="600" loading="lazy"><figcaption><strong>Agora of routes</strong><span>50%</span></figcaption></figure>
+        <figure><img src="assets/frame-0_75.webp" alt="Odessis tholos scene at 75 percent progress" width="960" height="600" loading="lazy"><figcaption><strong>The tholos</strong><span>75%</span></figcaption></figure>
+        <figure><img src="assets/frame-1.webp" alt="Odessis summit scene at 100 percent progress" width="960" height="600" loading="lazy"><figcaption><strong>The summit</strong><span>100%</span></figcaption></figure>
+      </div>
+      <div class="direction"><span>forward 0 → 1</span><b>state and pixels sampled</b><span>reverse 1 → 0</span></div>
+    </section>
+    <section class="evidence" aria-labelledby="evidence-title">
+      <div>
+        <div class="eyebrow">Release evidence / Chromium 151</div>
+        <h2 id="evidence-title">The report is the product.</h2>
+      </div>
+      <div>
+        <p>Both same-build controls returned the identical fingerprint. The downloadable reports retain every state digest, screenshot digest, browser/runtime field, check and recorded diagnostic. The gallery above is an editorial sample, not a substitute for the raw evidence.</p>
+        <ul class="checks">
+          <li><span>Forward / reverse state</span><b>pass</b></li>
+          <li><span>Reduced motion</span><b>pass</b></li>
+          <li><span>No-JavaScript semantics</span><b>pass</b></li>
+          <li><span>Forced WebGL failure</span><b>pass</b></li>
+          <li><span>Horizontal overflow</span><b>pass</b></li>
+          <li><span>Page errors</span><b>pass</b></li>
+        </ul>
+        <div class="downloads">
+          <a href="evidence/odessis-production-control-run-1-report.json">Inspect baseline report JSON</a>
+          <a href="evidence/odessis-production-control-run-2-report.json">Inspect fresh-context report JSON</a>
+          <a href="evidence/SHA256SUMS">Verify SHA-256 manifest</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer>Phone-sized browser contexts are not physical-device evidence. Automated checks are not WCAG certification. See the repository for the complete evidence boundaries.</footer>
+</body>
+</html>

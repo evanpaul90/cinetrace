@@ -1,6 +1,14 @@
 # CineTrace
 
+[![test](https://github.com/evanpaul90/cinetrace/actions/workflows/test.yml/badge.svg)](https://github.com/evanpaul90/cinetrace/actions/workflows/test.yml)
+[![license: MIT](https://img.shields.io/badge/license-MIT-2f7f73.svg)](LICENSE)
+[![Node 22+](https://img.shields.io/badge/node-%3E%3D22-35506b.svg)](package.json)
+
 CineTrace turns a progress-driven web experience into a deterministic filmstrip, then checks whether the experience remains structurally sound in both directions. It is a small, MIT-licensed Node 22+ CLI built on Playwright.
+
+[![Five real CineTrace checkpoints from the Odessis production audit](docs/assets/cinetrace-filmstrip.webp)](https://evanpaul90.github.io/cinetrace/)
+
+**[Inspect the live sample report](https://evanpaul90.github.io/cinetrace/)** · **[Read the raw production evidence](evidence/README.md)**
 
 It reports:
 
@@ -17,10 +25,15 @@ It reports:
 
 ## Install and run
 
+The npm name is reserved for a future package release but is **not published today**. Run the
+tagged source release directly:
+
 ```sh
-npm install
+git clone --depth 1 --branch v0.3.0 https://github.com/evanpaul90/cinetrace.git
+cd cinetrace
+npm ci
 npx playwright install chromium firefox webkit
-npx cinetrace audit https://example.test \
+node src/cli.js audit https://example.test \
   --viewports desktop,mobile \
   --steps 15 \
   --reverse \
@@ -130,10 +143,17 @@ The test corpus proves native-scroll checkpoint accuracy, bounded readiness with
 
 ## Production evidence
 
-The repository includes the exact public adapter and a machine-readable summary for the 2 September
-2026 Odessis production control under `evidence/`. That audit covered five checkpoints forward and
-reverse at desktop and phone-sized viewports, repeated the entire run in a fresh same-build control,
-and returned zero defects with matching fingerprint `1273464af6848e6b`. `PROOF.md` records both the
+The repository includes the [exact public adapter](evidence/odessis-adapter.mjs),
+[machine-readable summary](evidence/odessis-production-control-2026-09-02.json), complete sanitized
+[run 1](evidence/odessis-production-control-run-1-report.json) and
+[run 2](evidence/odessis-production-control-run-2-report.json) reports, and a checked
+[SHA-256 manifest](evidence/SHA256SUMS). That audit covered five checkpoints forward and reverse at
+desktop and phone-sized viewports, repeated the entire run in a fresh same-build control, and
+returned zero defects with matching fingerprint `1273464af6848e6b`.
+
+The [live sample report](https://evanpaul90.github.io/cinetrace/) uses five unaltered frames from
+that production audit. The `v0.3.0` GitHub Release carries the complete evidence bundle, including
+all 40 original PNG captures and both generated static reports. [PROOF.md](PROOF.md) records both the
 passing evidence and the earlier premature green result that CineTrace rejected after a longer audit
 crossed a real late-layout mutation.
 

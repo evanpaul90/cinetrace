@@ -1,0 +1,2591 @@
+{
+  "schemaVersion": "2.0.0",
+  "tool": {
+    "name": "CineTrace",
+    "version": "0.3.0"
+  },
+  "environment": {
+    "browser": {
+      "engine": "chromium",
+      "version": "151.0.7922.34"
+    },
+    "os": {
+      "platform": "darwin",
+      "arch": "arm64",
+      "release": "25.4.0"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "v26.0.0"
+    },
+    "renderer": {
+      "metricScope": "webgl-specific",
+      "available": true,
+      "api": "webgl2",
+      "vendor": "WebKit",
+      "renderer": "WebKit WebGL",
+      "unmaskedVendor": "Google Inc. (Google)",
+      "unmaskedRenderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (LLVM 10.0.0) (0x0000C0DE)), SwiftShader driver)"
+    },
+    "metricLabels": {
+      "generic": [
+        "overflow",
+        "heading",
+        "keyboard",
+        "semantic-content",
+        "primary-action",
+        "overlay-collision",
+        "reverse-drift",
+        "reduced-motion",
+        "page-errors"
+      ],
+      "engineSpecific": [
+        "renderer-metadata",
+        "forced-webgl-failure"
+      ]
+    }
+  },
+  "target": "https://odessis.in/",
+  "generatedAt": "2026-09-02T02:16:55.846Z",
+  "configuration": {
+    "viewports": [
+      {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900,
+        "deviceScaleFactor": 1
+      },
+      {
+        "name": "mobile",
+        "width": 390,
+        "height": 844,
+        "deviceScaleFactor": 1
+      }
+    ],
+    "steps": [
+      0,
+      0.25,
+      0.5,
+      0.75,
+      1
+    ],
+    "direction": "both",
+    "adapter": "./evidence/odessis-adapter.mjs",
+    "selectors": {
+      "primaryAction": "a[href], button",
+      "noJsPrimaryAction": "a[href], button",
+      "semanticContent": "main, body",
+      "noJsSemanticContent": "main, body",
+      "overlay": "[data-cinetrace-overlay]",
+      "overlayTarget": "[data-cinetrace-protected]"
+    },
+    "forceWebglFailure": true,
+    "checkReducedMotion": true,
+    "controlRuns": 2,
+    "browser": "chromium"
+  },
+  "verdict": {
+    "pass": true,
+    "defectCount": 0
+  },
+  "defects": [],
+  "viewports": [
+    {
+      "viewport": {
+        "name": "desktop",
+        "width": 1440,
+        "height": 900,
+        "deviceScaleFactor": 1
+      },
+      "frames": [
+        {
+          "direction": "forward",
+          "progress": 0,
+          "screenshot": "images/0-desktop-forward-0.png",
+          "screenshotDigest": "5de0848dcc53214f41b66f0ab25376acb6cb58d7a32f9b63d7c191a5704c02ec",
+          "state": {
+            "target": 0,
+            "chapter": 0,
+            "chapterId": "harbour",
+            "foreground": "harbour-rope",
+            "portraitFactor": 0,
+            "camera": {
+              "position": [
+                -1,
+                2.6,
+                92
+              ],
+              "fov": 48,
+              "aspect": 1.6
+            }
+          },
+          "stateDigest": "df086c4ca43bd0e2",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 1440,
+            "documentWidth": 1440,
+            "bodyWidth": 1483,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -720,
+                "right": 2160,
+                "width": 2880
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2558
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "forward",
+          "progress": 0.25,
+          "screenshot": "images/0-desktop-forward-0_25.png",
+          "screenshotDigest": "8ce40094217f68c990eadb1b30cb0d8baf1213b3780df89c2b00fec569990a78",
+          "state": {
+            "target": 1.7506,
+            "chapter": 2,
+            "chapterId": "stoa",
+            "foreground": "stoa-curtain",
+            "portraitFactor": 0,
+            "camera": {
+              "position": [
+                -2.4,
+                10.93,
+                -48.14
+              ],
+              "fov": 52.79,
+              "aspect": 1.6
+            }
+          },
+          "stateDigest": "669e03adbfb011d1",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 1440,
+            "documentWidth": 1440,
+            "bodyWidth": 1483,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -720,
+                "right": 2160,
+                "width": 2880
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2558
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "forward",
+          "progress": 0.5,
+          "screenshot": "images/0-desktop-forward-0_5.png",
+          "screenshotDigest": "9ed3648fb49db14d7ca606bbc9849c8b6888a121e2e1a615d0c7fe8fc5c6680d",
+          "state": {
+            "target": 3.5002,
+            "chapter": 4,
+            "chapterId": "agora",
+            "foreground": "agora-awning",
+            "portraitFactor": 0,
+            "camera": {
+              "position": [
+                -7.96,
+                38.62,
+                -250.07
+              ],
+              "fov": 53.9,
+              "aspect": 1.6
+            }
+          },
+          "stateDigest": "6bd4a6c5368f5600",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 1440,
+            "documentWidth": 1440,
+            "bodyWidth": 1483,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -720,
+                "right": 2160,
+                "width": 2880
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2558
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "forward",
+          "progress": 0.75,
+          "screenshot": "images/0-desktop-forward-0_75.png",
+          "screenshotDigest": "82ab8044ae0c804a92ff9df09d55a1c632f69e040970ea33e5a19d8240cc31b6",
+          "state": {
+            "target": 5.2505,
+            "chapter": 5,
+            "chapterId": "tholos",
+            "foreground": "tholos-mist",
+            "portraitFactor": 0,
+            "camera": {
+              "position": [
+                -24.02,
+                66,
+                -413.34
+              ],
+              "fov": 46.9,
+              "aspect": 1.6
+            }
+          },
+          "stateDigest": "278b3c991a01dfdb",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 1440,
+            "documentWidth": 1440,
+            "bodyWidth": 1483,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -720,
+                "right": 2160,
+                "width": 2880
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2558
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "forward",
+          "progress": 1,
+          "screenshot": "images/0-desktop-forward-1.png",
+          "screenshotDigest": "47ec145f41e9129d4bf74a5e30cbbc910b026312b61481490997a19e4763310b",
+          "state": {
+            "target": 7,
+            "chapter": 7,
+            "chapterId": "temple",
+            "foreground": "temple-laurel",
+            "portraitFactor": 0,
+            "camera": {
+              "position": [
+                0,
+                101.5,
+                -648
+              ],
+              "fov": 52,
+              "aspect": 1.6
+            }
+          },
+          "stateDigest": "6e77641abce89d58",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 1440,
+            "documentWidth": 1440,
+            "bodyWidth": 1483,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -720,
+                "right": 2160,
+                "width": 2880
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2558
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "reverse",
+          "progress": 1,
+          "screenshot": "images/0-desktop-reverse-1.png",
+          "screenshotDigest": "47ec145f41e9129d4bf74a5e30cbbc910b026312b61481490997a19e4763310b",
+          "state": {
+            "target": 7,
+            "chapter": 7,
+            "chapterId": "temple",
+            "foreground": "temple-laurel",
+            "portraitFactor": 0,
+            "camera": {
+              "position": [
+                0,
+                101.5,
+                -648
+              ],
+              "fov": 52,
+              "aspect": 1.6
+            }
+          },
+          "stateDigest": "6e77641abce89d58",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 1440,
+            "documentWidth": 1440,
+            "bodyWidth": 1483,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -720,
+                "right": 2160,
+                "width": 2880
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2558
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "reverse",
+          "progress": 0.75,
+          "screenshot": "images/0-desktop-reverse-0_75.png",
+          "screenshotDigest": "82ab8044ae0c804a92ff9df09d55a1c632f69e040970ea33e5a19d8240cc31b6",
+          "state": {
+            "target": 5.2505,
+            "chapter": 5,
+            "chapterId": "tholos",
+            "foreground": "tholos-mist",
+            "portraitFactor": 0,
+            "camera": {
+              "position": [
+                -24.02,
+                66,
+                -413.34
+              ],
+              "fov": 46.9,
+              "aspect": 1.6
+            }
+          },
+          "stateDigest": "278b3c991a01dfdb",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 1440,
+            "documentWidth": 1440,
+            "bodyWidth": 1483,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -720,
+                "right": 2160,
+                "width": 2880
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2558
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "reverse",
+          "progress": 0.5,
+          "screenshot": "images/0-desktop-reverse-0_5.png",
+          "screenshotDigest": "9ed3648fb49db14d7ca606bbc9849c8b6888a121e2e1a615d0c7fe8fc5c6680d",
+          "state": {
+            "target": 3.5002,
+            "chapter": 4,
+            "chapterId": "agora",
+            "foreground": "agora-awning",
+            "portraitFactor": 0,
+            "camera": {
+              "position": [
+                -7.96,
+                38.62,
+                -250.07
+              ],
+              "fov": 53.9,
+              "aspect": 1.6
+            }
+          },
+          "stateDigest": "6bd4a6c5368f5600",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 1440,
+            "documentWidth": 1440,
+            "bodyWidth": 1483,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -720,
+                "right": 2160,
+                "width": 2880
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2558
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "reverse",
+          "progress": 0.25,
+          "screenshot": "images/0-desktop-reverse-0_25.png",
+          "screenshotDigest": "8ce40094217f68c990eadb1b30cb0d8baf1213b3780df89c2b00fec569990a78",
+          "state": {
+            "target": 1.7506,
+            "chapter": 2,
+            "chapterId": "stoa",
+            "foreground": "stoa-curtain",
+            "portraitFactor": 0,
+            "camera": {
+              "position": [
+                -2.4,
+                10.93,
+                -48.14
+              ],
+              "fov": 52.79,
+              "aspect": 1.6
+            }
+          },
+          "stateDigest": "669e03adbfb011d1",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 1440,
+            "documentWidth": 1440,
+            "bodyWidth": 1483,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -720,
+                "right": 2160,
+                "width": 2880
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2558
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "reverse",
+          "progress": 0,
+          "screenshot": "images/0-desktop-reverse-0.png",
+          "screenshotDigest": "5de0848dcc53214f41b66f0ab25376acb6cb58d7a32f9b63d7c191a5704c02ec",
+          "state": {
+            "target": 0,
+            "chapter": 0,
+            "chapterId": "harbour",
+            "foreground": "harbour-rope",
+            "portraitFactor": 0,
+            "camera": {
+              "position": [
+                -1,
+                2.6,
+                92
+              ],
+              "fov": 48,
+              "aspect": 1.6
+            }
+          },
+          "stateDigest": "df086c4ca43bd0e2",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 1440,
+            "documentWidth": 1440,
+            "bodyWidth": 1483,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -720,
+                "right": 2160,
+                "width": 2880
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -43.2,
+                "right": 1483.2,
+                "width": 1526.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2558
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        }
+      ],
+      "checks": {
+        "overflow": {
+          "pass": true,
+          "failingFrames": []
+        },
+        "semantics": {
+          "pass": true,
+          "selector": "main, body",
+          "h1Count": 1,
+          "hasMainLandmark": true,
+          "meaningfulTextCharacters": 2558
+        },
+        "primaryAction": {
+          "pass": true,
+          "selector": "a[href], button",
+          "found": true,
+          "matchCount": 47,
+          "visible": true,
+          "enabled": true,
+          "named": true,
+          "destination": "#harbour",
+          "tagName": "a"
+        },
+        "primaryActionFallback": {
+          "status": 200,
+          "pass": true,
+          "selector": "a[href], button",
+          "found": true,
+          "matchCount": 38,
+          "visible": true,
+          "enabled": true,
+          "named": true,
+          "destination": "#harbour",
+          "tagName": "a"
+        },
+        "keyboardReachability": {
+          "pass": true,
+          "selector": "a[href], button",
+          "targetCount": 47,
+          "focusableCount": 61,
+          "tabsRequired": 1,
+          "maxTabs": 62,
+          "key": "Tab",
+          "engine": "chromium"
+        },
+        "overlayCollision": {
+          "checked": false,
+          "pass": true,
+          "overlaySelector": "[data-cinetrace-overlay]",
+          "protectedSelector": "[data-cinetrace-protected]",
+          "failingFrames": []
+        },
+        "semanticFallback": {
+          "status": 200,
+          "pass": true,
+          "selector": "main, body",
+          "h1Count": 1,
+          "hasMainLandmark": true,
+          "meaningfulTextCharacters": 2490
+        },
+        "reverseDrift": {
+          "checked": true,
+          "pass": true,
+          "mismatches": []
+        },
+        "reducedMotion": {
+          "checked": true,
+          "pass": true,
+          "status": 200,
+          "mediaQueryMatches": true,
+          "activeAnimations": [],
+          "errors": []
+        },
+        "webglFailure": {
+          "checked": true,
+          "metricScope": "engine-specific",
+          "pass": true,
+          "status": 200,
+          "patchActive": true,
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2767
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 39,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "errors": [
+            {
+              "type": "console",
+              "critical": false,
+              "message": "THREE.WebGLRenderer: Error creating WebGL context."
+            },
+            {
+              "type": "console",
+              "critical": false,
+              "message": "[odessis] spatial renderer unavailable Error: Error creating WebGL context.\n    at new Ua (https://odessis.in/assets/vendor/three.module.min.js:6:320086)\n    at boot (https://odessis.in/js/main.js:67:20)\n    at https://odessis.in/js/main.js:31:1"
+            }
+          ],
+          "fatalErrors": []
+        },
+        "pageErrors": {
+          "pass": true,
+          "status": 200,
+          "errors": []
+        }
+      }
+    },
+    {
+      "viewport": {
+        "name": "mobile",
+        "width": 390,
+        "height": 844,
+        "deviceScaleFactor": 1
+      },
+      "frames": [
+        {
+          "direction": "forward",
+          "progress": 0,
+          "screenshot": "images/1-mobile-forward-0.png",
+          "screenshotDigest": "383bad29b80360b49b09ae2e7de55ff1d484074ed560134ae9e2ea12b7fecd17",
+          "state": {
+            "target": 0,
+            "chapter": 0,
+            "chapterId": "harbour",
+            "foreground": "harbour-rope",
+            "portraitFactor": 1,
+            "camera": {
+              "position": [
+                0,
+                2.8,
+                96
+              ],
+              "fov": 58,
+              "aspect": 0.462
+            }
+          },
+          "stateDigest": "6c3bd85188814fcd",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 390,
+            "documentWidth": 390,
+            "bodyWidth": 433,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -195,
+                "right": 585,
+                "width": 780
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2376
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "forward",
+          "progress": 0.25,
+          "screenshot": "images/1-mobile-forward-0_25.png",
+          "screenshotDigest": "db3c65d0a27d519e55d3177383a2f5cc04202274ef885a500d00d88bed9ad362",
+          "state": {
+            "target": 1.7501,
+            "chapter": 2,
+            "chapterId": "stoa",
+            "foreground": "stoa-curtain",
+            "portraitFactor": 1,
+            "camera": {
+              "position": [
+                2.5,
+                13.54,
+                -73.07
+              ],
+              "fov": 61.79,
+              "aspect": 0.462
+            }
+          },
+          "stateDigest": "3a94a2a7e9d5409e",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 390,
+            "documentWidth": 390,
+            "bodyWidth": 433,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -195,
+                "right": 585,
+                "width": 780
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2376
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "forward",
+          "progress": 0.5,
+          "screenshot": "images/1-mobile-forward-0_5.png",
+          "screenshotDigest": "d3819c5d266e916906b089f0b2ea3a80d3a97ae8b72055651e7df7a3afbb2836",
+          "state": {
+            "target": 3.4998,
+            "chapter": 3,
+            "chapterId": "theatre",
+            "foreground": "theatre-rim-grass",
+            "portraitFactor": 1,
+            "camera": {
+              "position": [
+                -9.06,
+                38.42,
+                -252.76
+              ],
+              "fov": 64.4,
+              "aspect": 0.462
+            }
+          },
+          "stateDigest": "acdd60092dd8ff8c",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 390,
+            "documentWidth": 390,
+            "bodyWidth": 433,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -195,
+                "right": 585,
+                "width": 780
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2376
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "forward",
+          "progress": 0.75,
+          "screenshot": "images/1-mobile-forward-0_75.png",
+          "screenshotDigest": "a416f03f48b847a8889ae6b674b897884261f01f81146aef212e7d0c7f978e28",
+          "state": {
+            "target": 5.25,
+            "chapter": 5,
+            "chapterId": "tholos",
+            "foreground": "tholos-mist",
+            "portraitFactor": 1,
+            "camera": {
+              "position": [
+                -16.87,
+                64.65,
+                -421.77
+              ],
+              "fov": 61.4,
+              "aspect": 0.462
+            }
+          },
+          "stateDigest": "d36cfd92d3414883",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 390,
+            "documentWidth": 390,
+            "bodyWidth": 433,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -195,
+                "right": 585,
+                "width": 780
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2376
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "forward",
+          "progress": 1,
+          "screenshot": "images/1-mobile-forward-1.png",
+          "screenshotDigest": "8bd25ef0007df6ad4f582c70e2e7fdd2289bf585bfcf3eb2747ab2c62e33d1a3",
+          "state": {
+            "target": 7,
+            "chapter": 7,
+            "chapterId": "temple",
+            "foreground": "temple-laurel",
+            "portraitFactor": 1,
+            "camera": {
+              "position": [
+                0,
+                99,
+                -634
+              ],
+              "fov": 38,
+              "aspect": 0.462
+            }
+          },
+          "stateDigest": "4ce4503938073aea",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 390,
+            "documentWidth": 390,
+            "bodyWidth": 433,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -195,
+                "right": 585,
+                "width": 780
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2376
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "reverse",
+          "progress": 1,
+          "screenshot": "images/1-mobile-reverse-1.png",
+          "screenshotDigest": "8bd25ef0007df6ad4f582c70e2e7fdd2289bf585bfcf3eb2747ab2c62e33d1a3",
+          "state": {
+            "target": 7,
+            "chapter": 7,
+            "chapterId": "temple",
+            "foreground": "temple-laurel",
+            "portraitFactor": 1,
+            "camera": {
+              "position": [
+                0,
+                99,
+                -634
+              ],
+              "fov": 38,
+              "aspect": 0.462
+            }
+          },
+          "stateDigest": "4ce4503938073aea",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 390,
+            "documentWidth": 390,
+            "bodyWidth": 433,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -195,
+                "right": 585,
+                "width": 780
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2376
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "reverse",
+          "progress": 0.75,
+          "screenshot": "images/1-mobile-reverse-0_75.png",
+          "screenshotDigest": "a416f03f48b847a8889ae6b674b897884261f01f81146aef212e7d0c7f978e28",
+          "state": {
+            "target": 5.25,
+            "chapter": 5,
+            "chapterId": "tholos",
+            "foreground": "tholos-mist",
+            "portraitFactor": 1,
+            "camera": {
+              "position": [
+                -16.87,
+                64.65,
+                -421.77
+              ],
+              "fov": 61.4,
+              "aspect": 0.462
+            }
+          },
+          "stateDigest": "d36cfd92d3414883",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 390,
+            "documentWidth": 390,
+            "bodyWidth": 433,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -195,
+                "right": 585,
+                "width": 780
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2376
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "reverse",
+          "progress": 0.5,
+          "screenshot": "images/1-mobile-reverse-0_5.png",
+          "screenshotDigest": "d3819c5d266e916906b089f0b2ea3a80d3a97ae8b72055651e7df7a3afbb2836",
+          "state": {
+            "target": 3.4998,
+            "chapter": 3,
+            "chapterId": "theatre",
+            "foreground": "theatre-rim-grass",
+            "portraitFactor": 1,
+            "camera": {
+              "position": [
+                -9.06,
+                38.42,
+                -252.76
+              ],
+              "fov": 64.4,
+              "aspect": 0.462
+            }
+          },
+          "stateDigest": "acdd60092dd8ff8c",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 390,
+            "documentWidth": 390,
+            "bodyWidth": 433,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -195,
+                "right": 585,
+                "width": 780
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2376
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "reverse",
+          "progress": 0.25,
+          "screenshot": "images/1-mobile-reverse-0_25.png",
+          "screenshotDigest": "db3c65d0a27d519e55d3177383a2f5cc04202274ef885a500d00d88bed9ad362",
+          "state": {
+            "target": 1.7501,
+            "chapter": 2,
+            "chapterId": "stoa",
+            "foreground": "stoa-curtain",
+            "portraitFactor": 1,
+            "camera": {
+              "position": [
+                2.5,
+                13.54,
+                -73.07
+              ],
+              "fov": 61.79,
+              "aspect": 0.462
+            }
+          },
+          "stateDigest": "3a94a2a7e9d5409e",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 390,
+            "documentWidth": 390,
+            "bodyWidth": 433,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -195,
+                "right": 585,
+                "width": 780
+              },
+              {
+                "selector": "div.fg.fg--rope",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2376
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        },
+        {
+          "direction": "reverse",
+          "progress": 0,
+          "screenshot": "images/1-mobile-reverse-0.png",
+          "screenshotDigest": "383bad29b80360b49b09ae2e7de55ff1d484074ed560134ae9e2ea12b7fecd17",
+          "state": {
+            "target": 0,
+            "chapter": 0,
+            "chapterId": "harbour",
+            "foreground": "harbour-rope",
+            "portraitFactor": 1,
+            "camera": {
+              "position": [
+                0,
+                2.8,
+                96
+              ],
+              "fov": 58,
+              "aspect": 0.462
+            }
+          },
+          "stateDigest": "6c3bd85188814fcd",
+          "overflow": {
+            "pass": true,
+            "viewportWidth": 390,
+            "documentWidth": 390,
+            "bodyWidth": 433,
+            "overflowPixels": 0,
+            "clippedBodyOverflowPixels": 43,
+            "scrollingElement": "html",
+            "rootOverflowX": "hidden",
+            "bodyOverflowX": "hidden",
+            "offenders": [
+              {
+                "selector": "#grain",
+                "left": -195,
+                "right": 585,
+                "width": 780
+              },
+              {
+                "selector": "div.fg.fg--gate",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--curtain",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--grass",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--awning",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--mist",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--vine",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              },
+              {
+                "selector": "div.fg.fg--laurel",
+                "left": -11.7,
+                "right": 401.7,
+                "width": 413.4
+              }
+            ]
+          },
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2376
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 47,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "overlayCollision": {
+            "checked": false,
+            "pass": true,
+            "overlaySelector": "[data-cinetrace-overlay]",
+            "protectedSelector": "[data-cinetrace-protected]",
+            "overlayCount": 0,
+            "protectedCount": 0,
+            "collisions": []
+          }
+        }
+      ],
+      "checks": {
+        "overflow": {
+          "pass": true,
+          "failingFrames": []
+        },
+        "semantics": {
+          "pass": true,
+          "selector": "main, body",
+          "h1Count": 1,
+          "hasMainLandmark": true,
+          "meaningfulTextCharacters": 2376
+        },
+        "primaryAction": {
+          "pass": true,
+          "selector": "a[href], button",
+          "found": true,
+          "matchCount": 47,
+          "visible": true,
+          "enabled": true,
+          "named": true,
+          "destination": "#harbour",
+          "tagName": "a"
+        },
+        "primaryActionFallback": {
+          "status": 200,
+          "pass": true,
+          "selector": "a[href], button",
+          "found": true,
+          "matchCount": 38,
+          "visible": true,
+          "enabled": true,
+          "named": true,
+          "destination": "#harbour",
+          "tagName": "a"
+        },
+        "keyboardReachability": {
+          "pass": true,
+          "selector": "a[href], button",
+          "targetCount": 47,
+          "focusableCount": 61,
+          "tabsRequired": 1,
+          "maxTabs": 62,
+          "key": "Tab",
+          "engine": "chromium"
+        },
+        "overlayCollision": {
+          "checked": false,
+          "pass": true,
+          "overlaySelector": "[data-cinetrace-overlay]",
+          "protectedSelector": "[data-cinetrace-protected]",
+          "failingFrames": []
+        },
+        "semanticFallback": {
+          "status": 200,
+          "pass": true,
+          "selector": "main, body",
+          "h1Count": 1,
+          "hasMainLandmark": true,
+          "meaningfulTextCharacters": 2490
+        },
+        "reverseDrift": {
+          "checked": true,
+          "pass": true,
+          "mismatches": []
+        },
+        "reducedMotion": {
+          "checked": true,
+          "pass": true,
+          "status": 200,
+          "mediaQueryMatches": true,
+          "activeAnimations": [],
+          "errors": []
+        },
+        "webglFailure": {
+          "checked": true,
+          "metricScope": "engine-specific",
+          "pass": true,
+          "status": 200,
+          "patchActive": true,
+          "semantics": {
+            "pass": true,
+            "selector": "main, body",
+            "h1Count": 1,
+            "hasMainLandmark": true,
+            "meaningfulTextCharacters": 2730
+          },
+          "primaryAction": {
+            "pass": true,
+            "selector": "a[href], button",
+            "found": true,
+            "matchCount": 39,
+            "visible": true,
+            "enabled": true,
+            "named": true,
+            "destination": "#harbour",
+            "tagName": "a"
+          },
+          "errors": [
+            {
+              "type": "console",
+              "critical": false,
+              "message": "THREE.WebGLRenderer: Error creating WebGL context."
+            },
+            {
+              "type": "console",
+              "critical": false,
+              "message": "[odessis] spatial renderer unavailable Error: Error creating WebGL context.\n    at new Ua (https://odessis.in/assets/vendor/three.module.min.js:6:320086)\n    at boot (https://odessis.in/js/main.js:67:20)\n    at https://odessis.in/js/main.js:31:1"
+            }
+          ],
+          "fatalErrors": []
+        },
+        "pageErrors": {
+          "pass": true,
+          "status": 200,
+          "errors": []
+        }
+      }
+    }
+  ],
+  "controls": {
+    "checked": true,
+    "requestedRuns": 2,
+    "completedRuns": 2,
+    "pass": true,
+    "baselineFingerprint": "1273464af6848e6b",
+    "runs": [
+      {
+        "run": 1,
+        "fingerprint": "1273464af6848e6b",
+        "match": true,
+        "sameBuild": true,
+        "report": "report.json"
+      },
+      {
+        "run": 2,
+        "fingerprint": "1273464af6848e6b",
+        "match": true,
+        "sameBuild": true,
+        "report": "controls/run-2/report.json"
+      }
+    ]
+  }
+}

@@ -100,6 +100,12 @@ same-build control. Both controls produced fingerprint `1273464af6848e6b` under 
 `evidence/odessis-production-control-2026-09-02.json`; the exact public application adapter used by
 the command is preserved at `evidence/odessis-adapter.mjs`.
 
+The two complete sanitized reports are preserved as
+`evidence/odessis-production-control-run-1-report.json` and
+`evidence/odessis-production-control-run-2-report.json`. Sanitization changed only the private local
+adapter pathname to its public repository path. `evidence/SHA256SUMS` binds those reports, the
+adapter and the compact summary; `npm run evidence:verify` verifies the manifest.
+
 CineTrace's reverse, screenshot and control oracles were not weakened. The earlier premature green
 remains invalid evidence; the final result passed only after the target's real readiness and
 determinism defects were corrected.
@@ -109,7 +115,7 @@ determinism defects were corrected.
 - `npm audit --audit-level=moderate`: 0 vulnerabilities
 - `node --check` on every source file: PASS
 - `report.schema.json` JSON syntax: PASS
-- `npm pack --dry-run`: PASS, 10 distributable files, 20.4 kB packed / 72.0 kB unpacked
+- `npm pack --dry-run`: PASS, 10 distributable files, 20.9 kB packed / 73.5 kB unpacked
 - Product-coupling scan over the distributable package payload: no Odessis references
 - Readiness scan: no `networkidle` dependency
 - `git diff --check`: PASS
