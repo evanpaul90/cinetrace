@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Uncaught WebGL failure fixture</title></head>
+<body>
+  <main><h1>The fallback remains visible but execution breaks</h1><p>The document keeps its semantic narrative and usable action when WebGL creation fails, yet the renderer path leaks an uncaught exception that can destabilize everything else on the page.</p><a href="/fallback">Continue with the semantic route</a><canvas id="scene" aria-hidden="true"></canvas></main>
+  <script>
+    const context = document.querySelector('#scene').getContext('webgl');
+    if (!context) setTimeout(() => { throw new Error('Unhandled renderer initialization failure'); }, 0);
+    let progress=0;window.cineTraceFixture={setProgress(value){progress=value},readState(){return{progress,renderer:Boolean(context)}}};
+  </script>
+</body>
+</html>

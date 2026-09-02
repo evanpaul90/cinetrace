@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Broken reverse fixture</title>
+  <style>
+    * { box-sizing:border-box; }
+    body { margin:0; background:#181a22; color:#f8f5ed; font:18px/1.5 system-ui; overflow-x:clip; }
+    main { max-width:800px; padding:48px; }
+    #scene { width:100px; height:100px; background:#72ddf7; transform:translateX(calc(var(--x, 0) * 1px)); }
+    @media (prefers-reduced-motion: reduce) { * { animation:none!important; transition:none!important; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>A scene with hidden reverse drift</h1>
+    <p>The page is structurally sound and fits the viewport, but its stateful progress controller adds a small offset whenever direction reverses. The matching checkpoints therefore look similar while producing different deterministic state.</p>
+    <a href="/book">Open the stable route</a>
+    <div id="scene"></div>
+  </main>
+  <script>
+    let previous = 0;
+    let x = 0;
+    window.cineTraceFixture = {
+      setProgress(value) {
+        const reversing = value < previous;
+        x = value * 100 + (reversing ? 7 : 0);
+        previous = value;
+        document.documentElement.style.setProperty('--x', String(x));
+      },
+      readState() { return { progress: previous, x }; }
+    };
+  </script>
+</body>
+</html>

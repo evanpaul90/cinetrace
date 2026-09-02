@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unsafe reduced motion fixture</title>
+  <style>#orb{width:80px;height:80px;background:#ff735c;animation:orbit 2s linear infinite}@keyframes orbit{to{transform:translateX(120px)}}</style>
+</head>
+<body><main><h1>Motion that ignores visitor preference</h1><p>The visual layer continues an infinite animation even when the operating system explicitly asks the page to reduce motion, while the rest of the semantic route remains structurally valid.</p><a href="/continue">Continue through the route</a><div id="orb"></div></main><script>let progress=0;window.cineTraceFixture={setProgress(value){progress=value},readState(){return{progress}}};</script></body>
+</html>

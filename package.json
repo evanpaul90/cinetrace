@@ -1,0 +1,25 @@
+{
+  "name": "cinetrace",
+  "version": "0.2.2",
+  "description": "Deterministic filmstrip audits for scroll- and progress-driven web experiences.",
+  "type": "module",
+  "bin": {
+    "cinetrace": "./src/cli.js"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./default-adapter": "./src/default-adapter.js",
+    "./report.schema.json": "./report.schema.json"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "audit": "node ./src/cli.js audit",
+    "test": "node --test ./test/*.test.js"
+  },
+  "dependencies": {
+    "playwright": "^1.58.2"
+  },
+  "license": "MIT"
+}

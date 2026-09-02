@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Long-lived request fixture</title></head>
+<body>
+  <main><h1>A ready page with a persistent connection</h1><p>The semantic document is ready for deterministic inspection even while an intentionally long-lived network response remains open in the background.</p><a href="/continue">Continue through the experience</a></main>
+  <script>window.longLivedStarted=true;fetch('/never').then(() => { window.longLivedHeadersReceived=true; });</script>
+</body>
+</html>

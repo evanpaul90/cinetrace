@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Native scroll fixture</title>
+  <style>
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:#13251f; color:#fff6df; font:18px/1.5 system-ui; overflow-x:clip; }
+    main { width:min(880px,100%); margin:auto; }
+    section { min-height:110vh; padding:48px; }
+    a { color:#ffcf66; }
+    @media (prefers-reduced-motion:reduce) { * { animation:none!important; transition:none!important; scroll-behavior:auto!important; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section><h1>A real document-length progress route</h1><p>This server-rendered page is deliberately taller than every configured viewport so the default CineTrace adapter must drive native window scroll rather than merely announcing an abstract progress value.</p><a href="/continue">Continue through the complete story</a></section>
+    <section><h2>The middle</h2><p>The second movement gives the scroll range enough distance for meaningful midpoint assertions.</p></section>
+    <section><h2>The end</h2><p>The final movement establishes the document bottom at progress one.</p></section>
+  </main>
+</body>
+</html>

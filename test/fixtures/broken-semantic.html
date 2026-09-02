@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Broken semantic fallback fixture</title>
+  <style>
+    body { margin:0; background:#f7eee0; color:#251e19; font:18px/1.5 system-ui; overflow-x:clip; }
+    main { max-width:820px; padding:48px; }
+    @media (prefers-reduced-motion: reduce) { * { animation:none!important; transition:none!important; } }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <script>
+    document.querySelector('#app').innerHTML = `<main><h1>Meaning appears only after JavaScript</h1><p>This rendered version looks semantically valid, but the original response carries no heading, main landmark, or useful explanation. CineTrace should catch that the experience disappears for crawlers and visitors when JavaScript cannot run.</p><a href="/book">Continue after rendering</a></main>`;
+    let progress = 0;
+    window.cineTraceFixture = { setProgress(value) { progress = value; }, readState() { return { progress }; } };
+  </script>
+</body>
+</html>

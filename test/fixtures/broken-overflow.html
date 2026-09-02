@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Broken overflow fixture</title>
+  <style>
+    body { margin:0; background:#20252b; color:white; font:18px/1.5 system-ui; }
+    main { padding:32px; }
+    #scene { width:1200px; height:160px; background:#ef8354; }
+    @media (prefers-reduced-motion: reduce) { * { animation:none!important; transition:none!important; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>This scene escapes its viewport</h1>
+    <p>The narrative content remains present and useful, but the deliberately rigid visual below is wider than a mobile screen. CineTrace should report the overflow and identify the oversized element without confusing it with a semantic defect.</p>
+    <a href="/book">Continue to the next scene</a>
+    <div id="scene"></div>
+  </main>
+  <script>
+    let progress = 0;
+    window.cineTraceFixture = { setProgress(value) { progress = value; }, readState() { return { progress }; } };
+  </script>
+</body>
+</html>

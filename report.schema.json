@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cinetrace.dev/schemas/report-1.1.0.json",
+  "title": "CineTrace audit report",
+  "type": "object",
+  "required": ["schemaVersion", "tool", "target", "generatedAt", "configuration", "verdict", "defects", "viewports"],
+  "properties": {
+    "schemaVersion": { "const": "1.1.0" },
+    "tool": {
+      "type": "object",
+      "required": ["name", "version"],
+      "properties": {
+        "name": { "const": "CineTrace" },
+        "version": { "type": "string" }
+      }
+    },
+    "target": { "type": "string", "format": "uri" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "configuration": {
+      "type": "object",
+      "required": ["viewports", "steps", "direction", "adapter", "selectors", "forceWebglFailure"],
+      "properties": {
+        "viewports": { "type": "array", "minItems": 1 },
+        "steps": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "direction": { "enum": ["forward", "reverse", "both"] },
+        "adapter": { "type": "string" },
+        "selectors": {
+          "type": "object",
+          "required": ["primaryAction", "noJsPrimaryAction", "semanticContent", "noJsSemanticContent"],
+          "additionalProperties": false,
+          "properties": {
+            "primaryAction": { "type": "string", "minLength": 1 },
+            "noJsPrimaryAction": { "type": "string", "minLength": 1 },
+            "semanticContent": { "type": "string", "minLength": 1 },
+            "noJsSemanticContent": { "type": "string", "minLength": 1 }
+          }
+        },
+        "forceWebglFailure": { "type": "boolean" }
+      }
+    },
+    "verdict": {
+      "type": "object",
+      "required": ["pass", "defectCount"],
+      "properties": {
+        "pass": { "type": "boolean" },
+        "defectCount": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "defects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "viewport", "severity"],
+        "properties": {
+          "code": { "type": "string" },
+          "viewport": { "type": "string" },
+          "severity": { "enum": ["error", "warning"] }
+        }
+      }
+    },
+    "viewports": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["viewport", "frames", "checks"],
+        "properties": {
+          "viewport": { "type": "object" },
+          "frames": { "type": "array" },
+          "checks": {
+            "type": "object",
+            "required": ["overflow", "semantics", "primaryAction", "primaryActionFallback", "keyboardReachability", "semanticFallback", "reverseDrift", "reducedMotion", "webglFailure", "pageErrors"],
+            "properties": {
+              "overflow": { "$ref": "#/$defs/check" },
+              "semantics": { "$ref": "#/$defs/check" },
+              "primaryAction": { "$ref": "#/$defs/check" },
+              "primaryActionFallback": { "$ref": "#/$defs/check" },
+              "keyboardReachability": { "$ref": "#/$defs/check" },
+              "semanticFallback": { "$ref": "#/$defs/check" },
+              "reverseDrift": { "type": "object" },
+              "reducedMotion": { "$ref": "#/$defs/check" },
+              "webglFailure": { "type": "object" },
+              "pageErrors": { "$ref": "#/$defs/check" }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "check": {
+      "type": "object",
+      "required": ["pass"],
+      "properties": { "pass": { "type": "boolean" } }
+    }
+  }
+}

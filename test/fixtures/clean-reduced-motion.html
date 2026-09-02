@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Safe reduced motion fixture</title>
+  <style>#orb{width:80px;height:80px;background:#58c4dc;animation:orbit 2s linear infinite}@keyframes orbit{to{transform:translateX(120px)}}@media(prefers-reduced-motion:reduce){#orb{animation:none}}</style>
+</head>
+<body><main><h1>Motion that respects visitor preference</h1><p>The visual enhancement moves for visitors who allow animation and becomes completely still when the operating system requests reduced motion, while its narrative and action remain usable.</p><a href="/continue">Continue without motion</a><div id="orb"></div></main><script>let progress=0;window.cineTraceFixture={setProgress(value){progress=value},readState(){return{progress}}};</script></body>
+</html>

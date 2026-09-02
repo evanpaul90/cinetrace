@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Clipped decoration fixture</title>
+  <style>
+    html,body{margin:0;overflow-x:hidden}
+    body{font:18px/1.5 system-ui;contain:paint}
+    main{position:relative;z-index:1;max-width:760px;padding:48px}
+    .decoration{position:absolute;z-index:0;left:0;top:0;width:calc(100vw + 43px);height:24px;background:#ffcf66;pointer-events:none}
+  </style>
+</head>
+<body>
+  <div class="decoration" aria-hidden="true"></div>
+  <main><h1>Decoration that is intentionally clipped</h1><p>The decorative band extends beyond the body’s measured content box, while the actual scrolling element remains exactly viewport wide and cannot move horizontally.</p><a href="/continue">Continue through the stable route</a></main>
+  <script>let progress=0;window.cineTraceFixture={setProgress(value){progress=value},readState(){return{progress}}};</script>
+</body>
+</html>

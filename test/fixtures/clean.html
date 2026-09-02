@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Clean CineTrace fixture</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; max-width: 100%; overflow-x: clip; }
+    body { min-height: 100vh; background: #13251f; color: #fff6df; font: 18px/1.5 system-ui; }
+    main { width: min(900px, 100%); padding: clamp(24px, 7vw, 90px); }
+    #scene { width: 140px; height: 140px; border-radius: 50%; background: #f4b942; transform: translateX(calc(var(--p, 0) * min(45vw, 480px))); }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>A stable cinematic sequence</h1>
+    <p>This fixture carries enough meaningful, server-rendered narrative content to remain understandable without JavaScript. It exists to prove that a deterministic scene can move in either direction while preserving layout, meaning, and accessibility.</p>
+    <a href="/book">Explore the complete sequence</a>
+    <div id="scene" aria-hidden="true"></div>
+  </main>
+  <script>
+    let progress = 0;
+    window.cineTraceFixture = {
+      setProgress(value) {
+        progress = value;
+        document.documentElement.style.setProperty('--p', String(value));
+      },
+      readState() { return { progress, x: Math.round(progress * 1000) / 1000 }; }
+    };
+  </script>
+</body>
+</html>

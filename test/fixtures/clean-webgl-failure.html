@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Safe WebGL failure fixture</title></head>
+<body>
+  <main><h1>The story survives renderer failure</h1><p>This semantic route and its primary action exist independently of the enhancement layer. When WebGL is unavailable, visitors and crawlers retain the complete explanation and a usable route forward.</p><a href="/fallback">Continue without the renderer</a><canvas id="scene" aria-hidden="true"></canvas></main>
+  <script>
+    const context = document.querySelector('#scene').getContext('webgl');
+    if (!context) console.error('Handled renderer diagnostic: WebGL context unavailable; semantic fallback active');
+    document.body.dataset.renderer = context ? 'enhanced' : 'fallback';
+    let progress=0;window.cineTraceFixture={setProgress(value){progress=value},readState(){return{progress,renderer:document.body.dataset.renderer}}};
+  </script>
+</body>
+</html>

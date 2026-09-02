@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unsafe WebGL failure fixture</title></head>
+<body>
+  <main id="experience"><h1>A renderer-dependent story</h1><p>The initial response contains a useful narrative and primary action, but a failed enhancement path mistakenly deletes both instead of preserving the resilient semantic route.</p><a href="/fallback">Continue through the story</a><canvas id="scene" aria-hidden="true"></canvas></main>
+  <script>
+    const context = document.querySelector('#scene').getContext('webgl');
+    if (!context) document.querySelector('#experience').remove();
+    let progress=0;window.cineTraceFixture={setProgress(value){progress=value},readState(){return{progress,renderer:Boolean(context)}}};
+  </script>
+</body>
+</html>
