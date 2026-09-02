@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Late scroll geometry mutation</title>
+  <style>
+    * { box-sizing:border-box; }
+    html { scroll-behavior:auto; }
+    body { margin:0; background:#101923; color:#f5ead0; font:18px/1.5 system-ui; }
+    main { width:min(860px,100%); margin:auto; }
+    section { min-height:118vh; padding:48px; border-bottom:1px solid #866f47; }
+    section:last-child { min-height:150vh; }
+    a { color:#ffd278; }
+    @media (prefers-reduced-motion:reduce) { * { animation:none!important; transition:none!important; } }
+  </style>
+</head>
+<body>
+  <main>
+    <section><h1>A route whose final geometry arrives late</h1><p>The server-rendered route initially exposes provisional chapter heights. A simulated asynchronous scene build later rewrites those heights while the journey is already being audited.</p><a href="/continue">Continue through the route</a></section>
+    <section><h2>Chapter two</h2></section>
+    <section><h2>Chapter three</h2></section>
+    <section><h2>Chapter four</h2></section>
+    <section><h2>Chapter five</h2></section>
+    <section><h2>Chapter six</h2></section>
+    <section><h2>Chapter seven</h2></section>
+    <section><h2>Chapter eight</h2></section>
+  </main>
+  <script>
+    const finalWeights = [1.15, 0.85, 1.30, 1.25, 1.35, 1.20, 1.20, 1.45];
+    let scrollEvents = 0;
+    addEventListener('scroll', () => {
+      scrollEvents += 1;
+      if (scrollEvents !== 6) return;
+      document.querySelectorAll('section').forEach((section, index) => {
+        section.style.minHeight = `${finalWeights[index] * 92}vh`;
+      });
+      document.documentElement.dataset.sceneReady = 'true';
+    }, { passive:true });
+  </script>
+</body>
+</html>

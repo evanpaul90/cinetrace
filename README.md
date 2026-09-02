@@ -57,6 +57,8 @@ The built-in adapter drives native page scroll at every checkpoint. It computes 
 
 Default readiness never waits for network idleness. After `page.goto(..., { waitUntil: 'domcontentloaded' })`, CineTrace gives fonts up to 750 ms to settle, waits two animation frames, then applies a deterministic 50 ms buffer. Analytics, streams, polling, and other long-lived requests therefore cannot hold the audit open indefinitely.
 
+That bounded default is a generic document-readiness gate, not a claim that an application-specific loader or asynchronous scene build has finished. If a fixed boot surface remains visible, or if the application finalizes its scroll geometry after asynchronous work, provide a custom `ready(page)` adapter that waits for the public ready signal and for the loader to leave. Final section heights should ideally be present in the initial CSS/HTML so native scroll geometry cannot change beneath a user or an audit. A short audit that captures only a loader is not release evidence even when its structural checks pass.
+
 Rendered and no-JavaScript semantic-content and primary-action selectors can be configured independently. Defaults are `main, article, [role="main"]` and `a[href], button`. A primary action passes only when it is found, visibly rendered, enabled, named, and has an actionable destination. The rendered route must also make one matching action reachable through sequential keyboard focus.
 
 Overlay collision is deliberately opt-in to avoid guessing whether visual overlap is intentional. Mark persistent overlays with `data-cinetrace-overlay` and content that must remain unobscured with `data-cinetrace-protected`, or provide `--overlay` and `--overlay-target` selectors. CineTrace records rectangle intersections greater than four pixels in both axes at every checkpoint.
@@ -64,6 +66,8 @@ Overlay collision is deliberately opt-in to avoid guessing whether visual overla
 `--force-webgl-failure` installs a pre-page-script patch that makes WebGL context creation return `null` for both `HTMLCanvasElement` and `OffscreenCanvas`. CineTrace then independently verifies that the configured semantic route and primary action survive. Console errors are retained as diagnostics because renderers commonly log the handled failure before activating fallback. The oracle fails for an uncaught page error, failed navigation or critical document/script/stylesheet request, an inactive patch, or missing semantic/action fallback. This check is opt-in and appears as `not checked` otherwise.
 
 `--control-runs 2` repeats the same audit with the same installed browser build. CineTrace fingerprints screenshots, adapter state, environment metadata and oracle outcomes. Any disagreement adds `CONTROL_DRIFT`; each control report remains under `controls/run-N/` for inspection.
+
+Because screenshot bytes are part of that fingerprint, an unfrozen canvas, video, shader clock, animated loader or other time-driven pixel source is expected to produce control drift. A project adapter should settle or freeze those sources when deterministic visual controls are required; CineTrace retains the disagreement instead of silently normalizing it away.
 
 Every report records browser engine and version, operating-system platform, architecture and release, Node version, viewport dimensions and device-scale factor. WebGL availability, API, vendor and renderer are recorded when the engine exposes them and remain honestly `null` otherwise.
 
@@ -132,3 +136,4 @@ CineTrace does not score beauty, aesthetic quality, universal smoothness or mark
 - Forced renderer failure covers initial WebGL/WebGL2 context creation, not later context loss, GPU process failure, or WebGPU.
 - A non-critical failed image, media, font, fetch, or XHR remains diagnostic in the forced-WebGL report when semantic content and the primary action survive. Projects can still inspect the full `errors` collection.
 - Virtual-scroll experiences require a custom adapter.
+- Long-running application boot sequences require a custom readiness adapter; the bounded default does not infer private loader conventions.

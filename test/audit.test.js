@@ -119,6 +119,25 @@ test('detects state drift at matching forward and reverse checkpoints', async ()
   assert.notDeepEqual(drift.mismatches[0].forwardState, drift.mismatches[0].reverseState);
 });
 
+test('detects a late asynchronous layout rewrite that changes native scroll geometry mid-journey', async () => {
+  const steps = Array.from({ length: 15 }, (_, index) => index / 14);
+  const result = await runFixture('broken-late-layout', {
+    adapterPath: null,
+    steps,
+  });
+  const forward = result.viewports[0].frames.filter((frame) => frame.direction === 'forward');
+  const reverse = result.viewports[0].frames.filter((frame) => frame.direction === 'reverse');
+  const forwardHeights = new Set(forward.map((frame) => frame.state.scrollHeight));
+  const reverseHeights = new Set(reverse.map((frame) => frame.state.scrollHeight));
+
+  assert.equal(forwardHeights.size, 2, JSON.stringify([...forwardHeights]));
+  assert.equal(reverseHeights.size, 1, JSON.stringify([...reverseHeights]));
+  assert.ok(result.defects.some((defect) => defect.code === 'REVERSE_DRIFT'));
+  assert.ok(result.viewports[0].checks.reverseDrift.mismatches.some((mismatch) => (
+    mismatch.forwardState.scrollHeight !== mismatch.reverseState.scrollHeight
+  )));
+});
+
 test('explicit overlay annotations pass without overlap and fail with geometric collision evidence', async () => {
   const clean = await runFixture('clean-overlay');
   const cleanCheck = clean.viewports[0].checks.overlayCollision;

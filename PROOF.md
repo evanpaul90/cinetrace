@@ -4,7 +4,7 @@ Verified locally on 2 September 2026 against CineTrace 0.3.0. This record contai
 
 ## Release-bar mutation corpus
 
-`npm test` completed 26 tests with 26 passes and 0 failures in 12.42 seconds.
+`npm test` completed 27 tests with 27 passes and 0 failures in 14.28 seconds.
 
 The corpus proves deliberate failures for:
 
@@ -17,6 +17,7 @@ The corpus proves deliberate failures for:
 - broken forced-WebGL fallback;
 - ignored reduced-motion preference;
 - nondeterministic same-build control drift;
+- a late scroll-geometry rewrite after traversal has begun;
 - malformed progress, timing and viewport configuration;
 - screenshot-path collisions.
 
@@ -64,9 +65,15 @@ Result: PASS, 0 defects, 15 evenly spaced states, 30 forward/reverse frames per 
 
 The generated schema-2.0.0 report records browser engine and version, OS platform/architecture/release, Node runtime, viewport dimensions and device scale, plus honestly nullable WebGL API/vendor/renderer fields. The clean report is validated against `report.schema.json` in the automated corpus.
 
-## Prior production audit retained
+## Production readiness diagnosis
 
-The earlier CineTrace 0.2.2 production run against `https://odessis.in/` remains historical regression evidence. It completed with 0 defects across desktop and mobile after bounded readiness, clipped-overflow and handled-WebGL diagnostics were repaired. This 0.3.0 release-bar pass did not make a new production-network claim.
+The earlier CineTrace 0.2.2 three-state pass against `https://odessis.in/` is not retained as release evidence. A 15-state 0.3.0 control run showed that the short audit had completed while the fixed boot canvas still covered the application and before the asynchronous scene build replaced provisional chapter heights with final weighted heights.
+
+The observed desktop document changed from 8784px to 8073px; mobile changed from 7090px to 7571px. Source inspection accounts for those values exactly: the initial CSS contributes 976vh on desktop and 840vh on mobile, while the later `scrollWeight * 92vh` rewrite contributes 897vh. The two same-build runs crossed that real layout transition at different reverse checkpoints, and the time-driven boot canvas produced different screenshot bytes, so `REVERSE_DRIFT` and `CONTROL_DRIFT` were valid findings under the configured default adapter.
+
+A post-diagnosis three-state production rerun completed in 11.8 seconds with zero reported defects and only the provisional heights. Its final screenshot still showed the boot canvas, proving why the short green result is insufficient. A separate desktop probe waited until the boot element was absent; readiness took 56.95 seconds in that headless run, after which five forward and five reverse checkpoints all retained the final 8073px height and matching scroll progress.
+
+Production release remains on hold until the target supplies final scroll geometry synchronously and/or the audit uses a project readiness adapter that waits for the public application-ready signal and boot removal. CineTrace's reverse oracle was not weakened.
 
 ## Package checks
 
