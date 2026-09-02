@@ -19,12 +19,13 @@ export async function renderHtmlReport(filePath, report) {
     const checks = viewport.checks;
     return `
       <section>
-        <h2>${escapeHtml(viewport.viewport.name)} <small>${viewport.viewport.width}×${viewport.viewport.height}</small></h2>
+        <h2>${escapeHtml(viewport.viewport.name)} <small>${viewport.viewport.width}×${viewport.viewport.height} @ ${viewport.viewport.deviceScaleFactor}× DPR</small></h2>
         <div class="checks">
           <div>Horizontal overflow ${badge(checks.overflow.pass)}</div>
           <div>Semantic content ${badge(checks.semantics.pass)}</div>
           <div>Rendered primary action ${badge(checks.primaryAction.pass)}</div>
           <div>Keyboard reaches action ${badge(checks.keyboardReachability.pass)}</div>
+          <div>Overlay collision ${badge(checks.overlayCollision.pass, !checks.overlayCollision.checked)}</div>
           <div>No-JS semantic fallback ${badge(checks.semanticFallback.pass)}</div>
           <div>No-JS primary action ${badge(checks.primaryActionFallback.pass)}</div>
           <div>Reverse drift ${badge(checks.reverseDrift.pass, !checks.reverseDrift.checked)}</div>
@@ -38,6 +39,8 @@ export async function renderHtmlReport(filePath, report) {
   const defectList = report.defects.length
     ? `<ul>${report.defects.map((defect) => `<li><code>${escapeHtml(defect.code)}</code> · ${escapeHtml(defect.viewport)}</li>`).join('')}</ul>`
     : '<p>No defects detected by the configured checks.</p>';
+  const environment = report.environment;
+  const control = report.controls;
   const html = `<!doctype html>
 <html lang="en">
 <head>
@@ -70,6 +73,8 @@ export async function renderHtmlReport(filePath, report) {
     <div class="eyebrow">CineTrace / deterministic filmstrip audit</div>
     <h1>${report.verdict.pass ? 'Sequence holds.' : `${report.verdict.defectCount} defect${report.verdict.defectCount === 1 ? '' : 's'} found.`}</h1>
     <p class="summary">${escapeHtml(report.target)} · ${escapeHtml(report.generatedAt)} · native progress, forward/reverse state comparison, overflow, semantic and primary-action fallback, keyboard access, forced WebGL failure, reduced motion, and runtime errors.</p>
+    <p class="summary">${escapeHtml(environment.browser.engine)} ${escapeHtml(environment.browser.version)} · ${escapeHtml(environment.os.platform)} ${escapeHtml(environment.os.arch)} ${escapeHtml(environment.os.release)} · ${escapeHtml(environment.runtime.name)} ${escapeHtml(environment.runtime.version)} · WebGL ${environment.renderer.available === true ? escapeHtml(environment.renderer.unmaskedRenderer ?? environment.renderer.renderer ?? 'available') : environment.renderer.available === false ? 'unavailable' : 'unknown'}</p>
+    <p class="summary">Same-build control: ${control.checked ? (control.pass ? 'pass' : 'fail') : 'not requested'} · ${control.completedRuns}/${control.requestedRuns} run${control.requestedRuns === 1 ? '' : 's'}.</p>
     ${defectList}
   </header>
   ${sections}

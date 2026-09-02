@@ -8,6 +8,7 @@ It reports:
 - one-H1 and semantic main-content presence;
 - visible, enabled, named primary actions in rendered and no-JavaScript routes;
 - keyboard reachability of the rendered primary action through `Tab`;
+- explicitly annotated overlay collisions at journey checkpoints;
 - usable semantic content when JavaScript is disabled;
 - state drift between matching forward and reverse progress checkpoints;
 - long-running animation under `prefers-reduced-motion: reduce`;
@@ -18,13 +19,25 @@ It reports:
 
 ```sh
 npm install
-npx playwright install chromium
-node src/cli.js audit https://example.com \
+npx playwright install chromium firefox webkit
+npx cinetrace audit https://example.test \
+  --viewports desktop,mobile \
+  --steps 15 \
+  --reverse \
+  --reduced-motion
+```
+
+The compatibility form above expands `--steps 15` into fifteen evenly spaced progress states, uses both forward and reverse traversal, and runs reduced-motion verification. The equivalent explicit form is:
+
+```sh
+node src/cli.js audit https://example.test \
   --out ./artifacts/example \
-  --viewport desktop:1440x900 \
-  --viewport mobile:390x844 \
+  --viewport desktop:1440x900@1 \
+  --viewport mobile:390x844@2 \
   --steps 0,0.25,0.5,0.75,1 \
   --direction both \
+  --browser chromium \
+  --control-runs 2 \
   --primary-action '.book-now' \
   --no-js-primary-action '#fallback-booking' \
   --semantic-content 'main' \
@@ -32,7 +45,9 @@ node src/cli.js audit https://example.com \
   --force-webgl-failure
 ```
 
-The command writes `report.json`, a static `index.html`, and PNG frames under `images/`. Reports identify schema version `1.1.0`; the corresponding JSON Schema ships as `report.schema.json`. A failed audit exits with status 1. Invalid CLI input exits with status 2.
+The command writes `report.json`, a static `index.html`, and PNG frames under `images/`. Reports identify schema version `2.0.0`; the corresponding JSON Schema ships as `report.schema.json`. A failed audit exits with status 1. Invalid CLI input exits with status 2.
+
+Use `--browser chromium`, `--browser firefox`, or `--browser webkit`. Generic checks share the same report contract across all three engines. Renderer metadata and forced WebGL failure are explicitly labelled engine-specific.
 
 Horizontal-overflow verdicts use the browser’s actual scrolling element (`document.scrollingElement`) rather than the widest internal box. `body.scrollWidth`, clipped overflow pixels, overflow styles, and out-of-bounds elements remain in the report as diagnostics. A deliberately oversized decoration clipped by the root therefore does not become a false failure, while a genuinely wider root still does.
 
@@ -44,7 +59,13 @@ Default readiness never waits for network idleness. After `page.goto(..., { wait
 
 Rendered and no-JavaScript semantic-content and primary-action selectors can be configured independently. Defaults are `main, article, [role="main"]` and `a[href], button`. A primary action passes only when it is found, visibly rendered, enabled, named, and has an actionable destination. The rendered route must also make one matching action reachable through sequential keyboard focus.
 
+Overlay collision is deliberately opt-in to avoid guessing whether visual overlap is intentional. Mark persistent overlays with `data-cinetrace-overlay` and content that must remain unobscured with `data-cinetrace-protected`, or provide `--overlay` and `--overlay-target` selectors. CineTrace records rectangle intersections greater than four pixels in both axes at every checkpoint.
+
 `--force-webgl-failure` installs a pre-page-script patch that makes WebGL context creation return `null` for both `HTMLCanvasElement` and `OffscreenCanvas`. CineTrace then independently verifies that the configured semantic route and primary action survive. Console errors are retained as diagnostics because renderers commonly log the handled failure before activating fallback. The oracle fails for an uncaught page error, failed navigation or critical document/script/stylesheet request, an inactive patch, or missing semantic/action fallback. This check is opt-in and appears as `not checked` otherwise.
+
+`--control-runs 2` repeats the same audit with the same installed browser build. CineTrace fingerprints screenshots, adapter state, environment metadata and oracle outcomes. Any disagreement adds `CONTROL_DRIFT`; each control report remains under `controls/run-N/` for inspection.
+
+Every report records browser engine and version, operating-system platform, architecture and release, Node version, viewport dimensions and device-scale factor. WebGL availability, API, vendor and renderer are recorded when the engine exposes them and remain honestly `null` otherwise.
 
 For a custom experience, pass an ESM module:
 
@@ -74,11 +95,15 @@ import { auditTarget } from 'cinetrace';
 const report = await auditTarget({
   url: 'https://example.com',
   outDir: './artifacts/example',
+  browserName: 'chromium',
   direction: 'both',
+  controlRuns: 2,
   primaryActionSelector: '.book-now',
   noJsPrimaryActionSelector: '#fallback-booking',
   semanticSelector: 'main',
   noJsSemanticSelector: 'main',
+  overlaySelector: '[data-cinetrace-overlay]',
+  protectedSelector: '[data-cinetrace-protected]',
   forceWebglFailure: true,
 });
 ```
@@ -89,7 +114,15 @@ const report = await auditTarget({
 npm test
 ```
 
-The test corpus proves native-scroll checkpoint accuracy, bounded readiness with an open streaming response, configurable primary-action and semantic selectors, keyboard reachability, safe and unsafe forced-WebGL failure paths, reduced-motion mutation behavior, screenshot-collision prevention, configuration validation, true root overflow versus intentionally clipped body decoration, reverse-state drift, and missing semantic fallback. The clean baseline must remain green.
+The test corpus proves native-scroll checkpoint accuracy, bounded readiness with an open streaming response, configurable primary-action and semantic selectors, keyboard reachability, annotated overlay collision, same-build control drift, safe and unsafe forced-WebGL failure paths, reduced-motion mutation behavior, screenshot-collision prevention, configuration validation, true root overflow versus intentionally clipped body decoration, reverse-state drift, and missing semantic fallback. The generic clean corpus runs in Chromium, Firefox and WebKit.
+
+## Evidence boundaries
+
+A desktop browser context sized to `390×844` is still a desktop browser at phone dimensions. It is not a physical phone and provides no evidence about mobile hardware, thermal behavior, touch latency or device GPU performance.
+
+Heading, semantic-content, primary-action, keyboard and reduced-motion results are focused automated checks. They are not WCAG conformance testing, an accessibility audit, or accessibility certification. Human review and testing with assistive technology remain necessary.
+
+CineTrace does not score beauty, aesthetic quality, universal smoothness or market demand. A captured checkpoint is inspectable evidence of sampled state, not proof that every intermediate frame was physically presented to a user.
 
 ## Known limits
 

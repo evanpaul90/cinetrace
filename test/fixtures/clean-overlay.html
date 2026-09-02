@@ -1,0 +1,5 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Safe overlay fixture</title><style>body{margin:0;font:18px/1.5 system-ui}.nav{position:fixed;inset:0 0 auto;height:64px;background:#16251f;color:white;z-index:4}.protected{position:absolute;top:120px;left:24px;width:280px;padding:20px;background:#ffcf66}main{min-height:130vh;padding:220px 32px 32px}</style></head>
+<body><nav class="nav" data-cinetrace-overlay>Persistent navigation</nav><aside class="protected" data-cinetrace-protected>Protected booking message remains fully visible.</aside><main><h1>An overlay with deliberate breathing room</h1><p>The fixed navigation and explicitly protected booking message are both visible at every journey checkpoint without their rectangles intersecting.</p><a href="/book">Book the experience</a></main><script>let progress=0;window.cineTraceFixture={setProgress(value){progress=value},readState(){return{progress}}};</script></body>
+</html>

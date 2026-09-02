@@ -6,6 +6,8 @@ import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { chromium } from 'playwright';
+import Ajv2020 from 'ajv/dist/2020.js';
+import addFormats from 'ajv-formats';
 import { auditTarget } from '../src/audit.js';
 import { ready as defaultReady } from '../src/default-adapter.js';
 
@@ -66,12 +68,23 @@ test('clean fixture passes and emits JSON plus an HTML filmstrip', async () => {
   const result = await runFixture('clean');
   assert.equal(result.verdict.pass, true, JSON.stringify(result.defects));
   const json = JSON.parse(await readFile(path.join(tempRoot, 'clean', 'report.json'), 'utf8'));
+  const schema = JSON.parse(await readFile(path.join(path.dirname(fixtureDir), '..', 'report.schema.json'), 'utf8'));
+  const validator = addFormats(new Ajv2020({ allErrors: true, strict: false })).compile(schema);
   const html = await readFile(path.join(tempRoot, 'clean', 'index.html'), 'utf8');
-  assert.equal(json.schemaVersion, '1.1.0');
+  assert.equal(json.schemaVersion, '2.0.0');
+  assert.equal(validator(json), true, JSON.stringify(validator.errors));
   assert.equal(json.viewports[0].frames.length, 6);
   assert.equal(json.viewports[0].checks.primaryAction.pass, true);
   assert.equal(json.viewports[0].checks.primaryActionFallback.pass, true);
   assert.equal(json.viewports[0].checks.keyboardReachability.pass, true);
+  assert.equal(json.environment.browser.engine, 'chromium');
+  assert.ok(json.environment.browser.version);
+  assert.equal(json.environment.os.platform, process.platform);
+  assert.equal(json.environment.os.arch, process.arch);
+  assert.ok(json.environment.os.release);
+  assert.equal(json.environment.runtime.version, process.version);
+  assert.equal(json.viewports[0].viewport.deviceScaleFactor, 1);
+  assert.equal(json.environment.renderer.metricScope, 'webgl-specific');
   assert.match(html, /deterministic filmstrip audit/i);
   assert.match(html, /images\/0-mobile-forward-0\.png/);
 });
@@ -104,6 +117,19 @@ test('detects state drift at matching forward and reverse checkpoints', async ()
   assert.equal(drift.checked, true);
   assert.ok(drift.mismatches.some((mismatch) => mismatch.progress === 0.5));
   assert.notDeepEqual(drift.mismatches[0].forwardState, drift.mismatches[0].reverseState);
+});
+
+test('explicit overlay annotations pass without overlap and fail with geometric collision evidence', async () => {
+  const clean = await runFixture('clean-overlay');
+  const cleanCheck = clean.viewports[0].checks.overlayCollision;
+  assert.equal(cleanCheck.checked, true);
+  assert.equal(cleanCheck.pass, true);
+  const broken = await runFixture('broken-overlay');
+  const brokenCheck = broken.viewports[0].checks.overlayCollision;
+  assert.equal(brokenCheck.checked, true);
+  assert.equal(brokenCheck.pass, false);
+  assert.ok(brokenCheck.failingFrames[0].collisions[0].overlapArea > 1000);
+  assert.ok(broken.defects.some((defect) => defect.code === 'OVERLAY_COLLISION'));
 });
 
 test('detects a semantic experience that disappears without JavaScript', async () => {
@@ -206,6 +232,13 @@ test('forced WebGL failure rejects an uncaught page error even when fallback con
   assert.ok(result.defects.some((defect) => defect.code === 'WEBGL_FAILURE_FALLBACK_MISSING'));
 });
 
+test('captures an unhandled promise rejection as a page error', async () => {
+  const result = await runFixture('broken-unhandled-rejection');
+  const errors = result.viewports[0].checks.pageErrors.errors;
+  assert.ok(errors.some((error) => error.type === 'pageerror' && /Unhandled journey promise rejection/.test(error.message)));
+  assert.ok(result.defects.some((defect) => defect.code === 'PAGE_ERRORS'));
+});
+
 test('reduced-motion mutation distinguishes a safe and unsafe animation', async () => {
   const safe = await runFixture('clean-reduced-motion');
   assert.equal(safe.viewports[0].checks.reducedMotion.pass, true);
@@ -236,3 +269,31 @@ test('viewport indices keep screenshot paths unique even when names normalize al
   assert.ok(screenshots.some((name) => name.includes('/0-phone-a-')));
   assert.ok(screenshots.some((name) => name.includes('/1-phone-a-')));
 });
+
+test('same-build control passes two clean runs and catches nondeterministic drift', async () => {
+  const settings = { steps: [0, 1], controlRuns: 2 };
+  const clean = await runFixture('clean', settings);
+  assert.equal(clean.controls.checked, true);
+  assert.equal(clean.controls.completedRuns, 2);
+  assert.equal(clean.controls.pass, true, JSON.stringify(clean.controls.runs));
+  assert.equal(clean.controls.runs[0].fingerprint, clean.controls.runs[1].fingerprint);
+  const broken = await runFixture('broken-control-drift', settings);
+  assert.equal(broken.controls.pass, false);
+  assert.notEqual(broken.controls.runs[0].fingerprint, broken.controls.runs[1].fingerprint);
+  assert.ok(broken.defects.some((defect) => defect.code === 'CONTROL_DRIFT'));
+});
+
+for (const browserName of ['chromium', 'firefox', 'webkit']) {
+  test(`generic clean corpus passes in ${browserName}`, async () => {
+    const result = await runFixture('clean-overlay', {
+      browserName,
+      steps: [0, 1],
+      direction: 'both',
+    });
+    assert.equal(result.environment.browser.engine, browserName);
+    assert.equal(result.verdict.pass, true, JSON.stringify(result.defects));
+    assert.equal(result.viewports[0].checks.overlayCollision.checked, true);
+    assert.ok(result.environment.metricLabels.generic.includes('overlay-collision'));
+    assert.ok(result.environment.metricLabels.engineSpecific.includes('forced-webgl-failure'));
+  });
+}

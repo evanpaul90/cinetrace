@@ -1,0 +1,5 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Unhandled rejection fixture</title></head>
+<body><main><h1>A semantic route with a rejected background task</h1><p>The visible route remains structurally complete, but an unhandled promise rejection proves browser execution is not healthy and must appear in page-error evidence.</p><button type="button">Continue through the route</button></main><script>Promise.reject(new Error('Unhandled journey promise rejection'));let progress=0;window.cineTraceFixture={setProgress(value){progress=value},readState(){return{progress}}};</script></body>
+</html>

@@ -1,15 +1,17 @@
 import path from 'node:path';
+import os from 'node:os';
 import { pathToFileURL } from 'node:url';
-import { chromium } from 'playwright';
+import { chromium, firefox, webkit } from 'playwright';
 import * as defaultAdapter from './default-adapter.js';
-import { ensureDir, slug, stateDigest, writeJson } from './utils.js';
+import { ensureDir, fileDigest, slug, stableStringify, stateDigest, writeJson } from './utils.js';
 import { renderHtmlReport } from './report.js';
 
 const DEFAULT_VIEWPORTS = [
-  { name: 'desktop', width: 1440, height: 900 },
-  { name: 'mobile', width: 390, height: 844 },
+  { name: 'desktop', width: 1440, height: 900, deviceScaleFactor: 1 },
+  { name: 'mobile', width: 390, height: 844, deviceScaleFactor: 1 },
 ];
 const DEFAULT_STEPS = [0, 0.25, 0.5, 0.75, 1];
+const BROWSER_TYPES = { chromium, firefox, webkit };
 
 async function loadAdapter(adapterPath) {
   if (!adapterPath) return defaultAdapter;
@@ -30,8 +32,14 @@ async function settle(page, delayMs) {
   if (delayMs > 0) await page.waitForTimeout(delayMs);
 }
 
-async function inspectDocument(page, primaryActionSelector, semanticSelector) {
-  return page.evaluate(({ actionSelector, contentSelector }) => {
+async function inspectDocument(
+  page,
+  primaryActionSelector,
+  semanticSelector,
+  overlaySelector = '[data-cinetrace-overlay]',
+  protectedSelector = '[data-cinetrace-protected]',
+) {
+  return page.evaluate(({ actionSelector, contentSelector, overlaySelector: overlayCss, protectedSelector: protectedCss }) => {
     const root = document.documentElement;
     const body = document.body;
     const scroller = document.scrollingElement ?? root;
@@ -72,6 +80,39 @@ async function inspectDocument(page, primaryActionSelector, semanticSelector) {
       return { element, visible, enabled, destination, named, usable };
     });
     const action = actions.find((candidate) => candidate.usable) ?? actions[0] ?? null;
+    const describeRect = (element) => {
+      const rect = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+      const visible = rect.width > 0 && rect.height > 0 && style.display !== 'none'
+        && style.visibility !== 'hidden' && Number(style.opacity) > 0;
+      return {
+        element,
+        visible,
+        rect: { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom, width: rect.width, height: rect.height },
+        selector: element.id ? `#${element.id}` : element.classList.length
+          ? `${element.tagName.toLowerCase()}.${[...element.classList].slice(0, 2).join('.')}`
+          : element.tagName.toLowerCase(),
+      };
+    };
+    const overlays = [...document.querySelectorAll(overlayCss)].map(describeRect).filter((item) => item.visible);
+    const protectedElements = [...document.querySelectorAll(protectedCss)].map(describeRect).filter((item) => item.visible);
+    const collisions = [];
+    for (const overlay of overlays) {
+      for (const protectedElement of protectedElements) {
+        if (overlay.element === protectedElement.element) continue;
+        const overlapWidth = Math.max(0, Math.min(overlay.rect.right, protectedElement.rect.right)
+          - Math.max(overlay.rect.left, protectedElement.rect.left));
+        const overlapHeight = Math.max(0, Math.min(overlay.rect.bottom, protectedElement.rect.bottom)
+          - Math.max(overlay.rect.top, protectedElement.rect.top));
+        if (overlapWidth > 4 && overlapHeight > 4) collisions.push({
+          overlay: overlay.selector,
+          protected: protectedElement.selector,
+          overlapWidth: Math.round(overlapWidth * 100) / 100,
+          overlapHeight: Math.round(overlapHeight * 100) / 100,
+          overlapArea: Math.round(overlapWidth * overlapHeight * 100) / 100,
+        });
+      }
+    }
     return {
       overflow: {
         pass: overflow <= 1,
@@ -103,29 +144,47 @@ async function inspectDocument(page, primaryActionSelector, semanticSelector) {
         destination: typeof action?.destination === 'string' ? action.destination : action?.destination ? 'button-action' : null,
         tagName: action?.element?.tagName?.toLowerCase() ?? null,
       },
+      overlayCollision: {
+        checked: overlays.length > 0 && protectedElements.length > 0,
+        pass: collisions.length === 0,
+        overlaySelector: overlayCss,
+        protectedSelector: protectedCss,
+        overlayCount: overlays.length,
+        protectedCount: protectedElements.length,
+        collisions,
+      },
     };
-  }, { actionSelector: primaryActionSelector, contentSelector: semanticSelector });
+  }, {
+    actionSelector: primaryActionSelector,
+    contentSelector: semanticSelector,
+    overlaySelector,
+    protectedSelector,
+  });
 }
 
 async function inspectKeyboardReachability(page, selector) {
   const targetCount = await page.locator(selector).count();
   const focusableCount = await page.locator('a[href], button, input, select, textarea, [tabindex]:not([tabindex="-1"]), [contenteditable="true"]').count();
   const maxTabs = Math.max(1, Math.min(focusableCount + 1, 1000));
-  await page.evaluate(() => {
-    if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
-    document.body?.focus();
-  });
-  for (let tabs = 1; tabs <= maxTabs; tabs += 1) {
-    await page.keyboard.press('Tab');
-    const match = await page.evaluate((actionSelector) => {
-      const active = document.activeElement;
-      return Boolean(active && active.matches(actionSelector));
-    }, selector);
-    if (match) {
-      return { pass: true, selector, targetCount, focusableCount, tabsRequired: tabs, maxTabs };
+  const engine = page.context().browser()?.browserType().name() ?? 'unknown';
+  const keys = engine === 'webkit' ? ['Tab', 'Alt+Tab'] : ['Tab'];
+  for (const key of keys) {
+    await page.evaluate(() => {
+      if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+      document.body?.focus();
+    });
+    for (let tabs = 1; tabs <= maxTabs; tabs += 1) {
+      await page.keyboard.press(key);
+      const match = await page.evaluate((actionSelector) => {
+        const active = document.activeElement;
+        return Boolean(active && active.matches(actionSelector));
+      }, selector);
+      if (match) {
+        return { pass: true, selector, targetCount, focusableCount, tabsRequired: tabs, maxTabs, key, engine };
+      }
     }
   }
-  return { pass: false, selector, targetCount, focusableCount, tabsRequired: null, maxTabs };
+  return { pass: false, selector, targetCount, focusableCount, tabsRequired: null, maxTabs, attemptedKeys: keys, engine };
 }
 
 function registerErrors(page, bucket) {
@@ -158,20 +217,22 @@ function registerErrors(page, bucket) {
   });
 }
 
-async function captureSequence({ page, adapter, steps, direction, viewportName, viewportIndex, imagesDir, delayMs, primaryActionSelector, semanticSelector }) {
+async function captureSequence({ page, adapter, steps, direction, viewportName, viewportIndex, imagesDir, delayMs, primaryActionSelector, semanticSelector, overlaySelector, protectedSelector }) {
   const frames = [];
   const ordered = direction === 'reverse' ? [...steps].reverse() : [...steps];
   for (const progress of ordered) {
     await adapter.setProgress(page, progress, { direction });
     await settle(page, delayMs);
     const state = await adapter.readState(page, { direction, progress });
-    const documentAudit = await inspectDocument(page, primaryActionSelector, semanticSelector);
+    const documentAudit = await inspectDocument(page, primaryActionSelector, semanticSelector, overlaySelector, protectedSelector);
     const fileName = `${viewportIndex}-${slug(viewportName)}-${direction}-${String(progress).replace('.', '_')}.png`;
-    await page.screenshot({ path: path.join(imagesDir, fileName), fullPage: false });
+    const screenshotPath = path.join(imagesDir, fileName);
+    await page.screenshot({ path: screenshotPath, fullPage: false });
     frames.push({
       direction,
       progress,
       screenshot: `images/${fileName}`,
+      screenshotDigest: await fileDigest(screenshotPath),
       state,
       stateDigest: stateDigest(state),
       ...documentAudit,
@@ -181,7 +242,8 @@ async function captureSequence({ page, adapter, steps, direction, viewportName, 
 }
 
 async function inspectReducedMotion(browser, url, viewport, adapter, timeoutMs, delayMs) {
-  const context = await browser.newContext({ viewport, reducedMotion: 'reduce' });
+  const { deviceScaleFactor = 1, ...dimensions } = viewport;
+  const context = await browser.newContext({ viewport: dimensions, deviceScaleFactor, reducedMotion: 'reduce' });
   const page = await context.newPage();
   const errors = [];
   registerErrors(page, errors);
@@ -206,20 +268,22 @@ async function inspectReducedMotion(browser, url, viewport, adapter, timeoutMs, 
         .filter((animation) => animation.playState === 'running' && animation.duration > 100),
     }));
     return {
+      checked: true,
       pass: Boolean(response?.ok()) && result.mediaQueryMatches && result.activeAnimations.length === 0 && errors.length === 0,
       status: response?.status() ?? null,
       ...result,
       errors: [...errors],
     };
   } catch (error) {
-    return { pass: false, status: response?.status() ?? null, mediaQueryMatches: false, activeAnimations: [], errors: [...errors, { type: 'navigation', message: error.message }] };
+    return { checked: true, pass: false, status: response?.status() ?? null, mediaQueryMatches: false, activeAnimations: [], errors: [...errors, { type: 'navigation', message: error.message }] };
   } finally {
     await context.close();
   }
 }
 
 async function inspectSemanticFallback(browser, url, viewport, timeoutMs, primaryActionSelector, semanticSelector) {
-  const context = await browser.newContext({ viewport, javaScriptEnabled: false });
+  const { deviceScaleFactor = 1, ...dimensions } = viewport;
+  const context = await browser.newContext({ viewport: dimensions, deviceScaleFactor, javaScriptEnabled: false });
   const page = await context.newPage();
   try {
     const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: timeoutMs });
@@ -244,8 +308,9 @@ async function inspectSemanticFallback(browser, url, viewport, timeoutMs, primar
 }
 
 async function inspectWebglFailure(browser, url, viewport, timeoutMs, primaryActionSelector, semanticSelector, enabled) {
-  if (!enabled) return { checked: false, pass: null, errors: [] };
-  const context = await browser.newContext({ viewport });
+  if (!enabled) return { checked: false, pass: null, metricScope: 'engine-specific', errors: [] };
+  const { deviceScaleFactor = 1, ...dimensions } = viewport;
+  const context = await browser.newContext({ viewport: dimensions, deviceScaleFactor });
   await context.addInitScript(() => {
     const blocked = new Set(['webgl', 'webgl2', 'experimental-webgl', 'moz-webgl', 'webkit-3d']);
     const originalCanvasGetContext = HTMLCanvasElement.prototype.getContext;
@@ -275,6 +340,7 @@ async function inspectWebglFailure(browser, url, viewport, timeoutMs, primaryAct
       || (['requestfailed', 'http-error'].includes(error.type) && error.critical));
     return {
       checked: true,
+      metricScope: 'engine-specific',
       pass: Boolean(response?.ok()) && patchActive && audit.semantics.pass && audit.primaryAction.pass && fatalErrors.length === 0,
       status: response?.status() ?? null,
       patchActive,
@@ -286,6 +352,7 @@ async function inspectWebglFailure(browser, url, viewport, timeoutMs, primaryAct
   } catch (error) {
     return {
       checked: true,
+      metricScope: 'engine-specific',
       pass: false,
       status: response?.status() ?? null,
       patchActive: false,
@@ -315,11 +382,84 @@ function compareReverseDrift(frames) {
   return { checked: true, pass: mismatches.length === 0, mismatches };
 }
 
+async function collectRendererMetadata(browser) {
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  try {
+    return await page.evaluate(() => {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl2') ?? canvas.getContext('webgl');
+      if (!gl) return {
+        metricScope: 'webgl-specific',
+        available: false,
+        api: null,
+        vendor: null,
+        renderer: null,
+        unmaskedVendor: null,
+        unmaskedRenderer: null,
+      };
+      const debug = gl.getExtension('WEBGL_debug_renderer_info');
+      return {
+        metricScope: 'webgl-specific',
+        available: true,
+        api: typeof WebGL2RenderingContext !== 'undefined' && gl instanceof WebGL2RenderingContext ? 'webgl2' : 'webgl',
+        vendor: gl.getParameter(gl.VENDOR) ?? null,
+        renderer: gl.getParameter(gl.RENDERER) ?? null,
+        unmaskedVendor: debug ? gl.getParameter(debug.UNMASKED_VENDOR_WEBGL) ?? null : null,
+        unmaskedRenderer: debug ? gl.getParameter(debug.UNMASKED_RENDERER_WEBGL) ?? null : null,
+      };
+    });
+  } catch (error) {
+    return {
+      metricScope: 'webgl-specific',
+      available: null,
+      api: null,
+      vendor: null,
+      renderer: null,
+      unmaskedVendor: null,
+      unmaskedRenderer: null,
+      error: error.message,
+    };
+  } finally {
+    await context.close();
+  }
+}
+
+function controlFingerprint(result) {
+  return stateDigest({
+    toolVersion: result.tool.version,
+    browser: result.environment.browser,
+    os: result.environment.os,
+    runtime: result.environment.runtime,
+    renderer: result.environment.renderer,
+    defects: result.defects,
+    viewports: result.viewports.map((viewport) => ({
+      viewport: viewport.viewport,
+      frames: viewport.frames.map((frame) => ({
+        direction: frame.direction,
+        progress: frame.progress,
+        screenshotDigest: frame.screenshotDigest,
+        stateDigest: frame.stateDigest,
+        overflow: frame.overflow.pass,
+        semantics: frame.semantics.pass,
+        primaryAction: frame.primaryAction.pass,
+        overlayCollision: frame.overlayCollision,
+      })),
+      checks: Object.fromEntries(Object.entries(viewport.checks).map(([name, check]) => [name, {
+        checked: check.checked,
+        pass: check.pass,
+      }])),
+    })),
+  });
+}
+
 export async function auditTarget(input = {}) {
+  const browserName = input.browserName ?? input.browserType?.name?.() ?? 'chromium';
   const options = {
     url: input.url,
     outDir: path.resolve(input.outDir ?? 'cinetrace-report'),
-    viewports: input.viewports?.length ? input.viewports : DEFAULT_VIEWPORTS,
+    viewports: (input.viewports?.length ? input.viewports : DEFAULT_VIEWPORTS)
+      .map((viewport) => ({ ...viewport, deviceScaleFactor: viewport.deviceScaleFactor ?? 1 })),
     steps: input.steps?.length ? input.steps : DEFAULT_STEPS,
     direction: input.direction ?? 'both',
     adapterPath: input.adapterPath,
@@ -329,11 +469,17 @@ export async function auditTarget(input = {}) {
     noJsPrimaryActionSelector: input.noJsPrimaryActionSelector ?? input.primaryActionSelector ?? 'a[href], button',
     semanticSelector: input.semanticSelector ?? 'main, article, [role="main"]',
     noJsSemanticSelector: input.noJsSemanticSelector ?? input.semanticSelector ?? 'main, article, [role="main"]',
+    overlaySelector: input.overlaySelector ?? '[data-cinetrace-overlay]',
+    protectedSelector: input.protectedSelector ?? '[data-cinetrace-protected]',
     forceWebglFailure: input.forceWebglFailure ?? false,
-    browserType: input.browserType ?? chromium,
+    checkReducedMotion: input.checkReducedMotion ?? true,
+    controlRuns: input.controlRuns ?? 1,
+    browserName,
+    browserType: input.browserType ?? BROWSER_TYPES[browserName],
   };
   if (!options.url) throw new TypeError('auditTarget requires a URL');
   if (!['forward', 'reverse', 'both'].includes(options.direction)) throw new TypeError('direction must be forward, reverse, or both');
+  if (!BROWSER_TYPES[options.browserName] && !input.browserType) throw new TypeError('browser must be chromium, firefox, or webkit');
   if (!Array.isArray(options.steps) || options.steps.length < 2 || options.steps.some((step) => !Number.isFinite(step) || step < 0 || step > 1)) {
     throw new TypeError('steps must contain at least two finite numbers from 0 through 1');
   }
@@ -350,6 +496,9 @@ export async function auditTarget(input = {}) {
     if (!Number.isInteger(viewport.width) || !Number.isInteger(viewport.height) || viewport.width < 200 || viewport.height < 200) {
       throw new TypeError('viewport width and height must be integers of at least 200px');
     }
+    if (!Number.isFinite(viewport.deviceScaleFactor) || viewport.deviceScaleFactor <= 0 || viewport.deviceScaleFactor > 4) {
+      throw new TypeError('viewport deviceScaleFactor must be a finite value greater than 0 and no more than 4');
+    }
   }
   const viewportNames = options.viewports.map((viewport) => viewport.name);
   if (new Set(viewportNames).size !== viewportNames.length) throw new TypeError('viewport names must be unique');
@@ -358,18 +507,46 @@ export async function auditTarget(input = {}) {
     noJsPrimaryActionSelector: options.noJsPrimaryActionSelector,
     semanticSelector: options.semanticSelector,
     noJsSemanticSelector: options.noJsSemanticSelector,
+    overlaySelector: options.overlaySelector,
+    protectedSelector: options.protectedSelector,
   })) {
     if (typeof selector !== 'string' || !selector.trim()) throw new TypeError(`${label} must be a non-empty CSS selector`);
+  }
+  if (!Number.isInteger(options.controlRuns) || options.controlRuns < 1 || options.controlRuns > 5) {
+    throw new RangeError('controlRuns must be an integer from 1 through 5');
   }
 
   const adapter = await loadAdapter(options.adapterPath);
   const imagesDir = path.join(options.outDir, 'images');
   await ensureDir(imagesDir);
   const browser = await options.browserType.launch({ headless: true });
+  const environment = {
+    browser: {
+      engine: browser.browserType().name(),
+      version: browser.version(),
+    },
+    os: {
+      platform: process.platform,
+      arch: process.arch,
+      release: os.release(),
+    },
+    runtime: {
+      name: 'node',
+      version: process.version,
+    },
+    renderer: await collectRendererMetadata(browser),
+    metricLabels: {
+      generic: ['overflow', 'heading', 'keyboard', 'semantic-content', 'primary-action', 'overlay-collision', 'reverse-drift', 'reduced-motion', 'page-errors'],
+      engineSpecific: ['renderer-metadata', 'forced-webgl-failure'],
+    },
+  };
   const viewportReports = [];
   try {
     for (const [viewportIndex, viewport] of options.viewports.entries()) {
-      const context = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height } });
+      const context = await browser.newContext({
+        viewport: { width: viewport.width, height: viewport.height },
+        deviceScaleFactor: viewport.deviceScaleFactor,
+      });
       const page = await context.newPage();
       const errors = [];
       let observedErrors = [];
@@ -381,7 +558,13 @@ export async function auditTarget(input = {}) {
       try {
         response = await page.goto(options.url, { waitUntil: 'domcontentloaded', timeout: options.timeoutMs });
         await adapter.ready(page);
-        initialAudit = await inspectDocument(page, options.primaryActionSelector, options.semanticSelector);
+        initialAudit = await inspectDocument(
+          page,
+          options.primaryActionSelector,
+          options.semanticSelector,
+          options.overlaySelector,
+          options.protectedSelector,
+        );
         keyboardReachability = await inspectKeyboardReachability(page, options.primaryActionSelector);
         const directions = options.direction === 'both' ? ['forward', 'reverse'] : [options.direction];
         for (const direction of directions) {
@@ -396,6 +579,8 @@ export async function auditTarget(input = {}) {
             delayMs: options.delayMs,
             primaryActionSelector: options.primaryActionSelector,
             semanticSelector: options.semanticSelector,
+            overlaySelector: options.overlaySelector,
+            protectedSelector: options.protectedSelector,
           }));
         }
       } catch (error) {
@@ -414,12 +599,25 @@ export async function auditTarget(input = {}) {
       };
       const semantics = initialAudit?.semantics ?? { pass: false, selector: options.semanticSelector, h1Count: 0, hasMainLandmark: false, meaningfulTextCharacters: 0 };
       const primaryAction = initialAudit?.primaryAction ?? { pass: false, selector: options.primaryActionSelector, found: false, matchCount: 0, visible: false, enabled: false, named: false, destination: null, tagName: null };
+      const overlayCollision = {
+        checked: frames.some((frame) => frame.overlayCollision.checked),
+        pass: frames.every((frame) => frame.overlayCollision.pass),
+        overlaySelector: options.overlaySelector,
+        protectedSelector: options.protectedSelector,
+        failingFrames: frames.filter((frame) => !frame.overlayCollision.pass).map((frame) => ({
+          direction: frame.direction,
+          progress: frame.progress,
+          collisions: frame.overlayCollision.collisions,
+        })),
+      };
       const reverseDrift = compareReverseDrift(frames);
-      const reducedMotion = await inspectReducedMotion(browser, options.url, { width: viewport.width, height: viewport.height }, adapter, options.timeoutMs, options.delayMs);
+      const reducedMotion = options.checkReducedMotion
+        ? await inspectReducedMotion(browser, options.url, viewport, adapter, options.timeoutMs, options.delayMs)
+        : { checked: false, pass: null, status: null, mediaQueryMatches: null, activeAnimations: [], errors: [] };
       const fallback = await inspectSemanticFallback(
         browser,
         options.url,
-        { width: viewport.width, height: viewport.height },
+        viewport,
         options.timeoutMs,
         options.noJsPrimaryActionSelector,
         options.noJsSemanticSelector,
@@ -429,7 +627,7 @@ export async function auditTarget(input = {}) {
       const webglFailure = await inspectWebglFailure(
         browser,
         options.url,
-        { width: viewport.width, height: viewport.height },
+        viewport,
         options.timeoutMs,
         options.primaryActionSelector,
         options.semanticSelector,
@@ -445,6 +643,7 @@ export async function auditTarget(input = {}) {
           primaryAction,
           primaryActionFallback,
           keyboardReachability,
+          overlayCollision,
           semanticFallback,
           reverseDrift,
           reducedMotion,
@@ -465,15 +664,17 @@ export async function auditTarget(input = {}) {
     if (!report.checks.primaryAction.pass) defects.push({ code: 'PRIMARY_ACTION_MISSING', viewport: name, severity: 'error' });
     if (!report.checks.primaryActionFallback.pass) defects.push({ code: 'NOJS_PRIMARY_ACTION_MISSING', viewport: name, severity: 'error' });
     if (!report.checks.keyboardReachability.pass) defects.push({ code: 'PRIMARY_ACTION_KEYBOARD_UNREACHABLE', viewport: name, severity: 'error' });
+    if (report.checks.overlayCollision.checked && !report.checks.overlayCollision.pass) defects.push({ code: 'OVERLAY_COLLISION', viewport: name, severity: 'error' });
     if (!report.checks.semanticFallback.pass) defects.push({ code: 'SEMANTIC_FALLBACK_MISSING', viewport: name, severity: 'error' });
     if (report.checks.reverseDrift.checked && !report.checks.reverseDrift.pass) defects.push({ code: 'REVERSE_DRIFT', viewport: name, severity: 'error' });
-    if (!report.checks.reducedMotion.pass) defects.push({ code: 'REDUCED_MOTION_UNSAFE', viewport: name, severity: 'error' });
+    if (report.checks.reducedMotion.checked && !report.checks.reducedMotion.pass) defects.push({ code: 'REDUCED_MOTION_UNSAFE', viewport: name, severity: 'error' });
     if (report.checks.webglFailure.checked && !report.checks.webglFailure.pass) defects.push({ code: 'WEBGL_FAILURE_FALLBACK_MISSING', viewport: name, severity: 'error' });
     if (!report.checks.pageErrors.pass) defects.push({ code: 'PAGE_ERRORS', viewport: name, severity: 'error' });
   }
   const result = {
-    schemaVersion: '1.1.0',
-    tool: { name: 'CineTrace', version: '0.2.2' },
+    schemaVersion: '2.0.0',
+    tool: { name: 'CineTrace', version: '0.3.0' },
+    environment,
     target: options.url,
     generatedAt: new Date().toISOString(),
     configuration: {
@@ -486,13 +687,63 @@ export async function auditTarget(input = {}) {
         noJsPrimaryAction: options.noJsPrimaryActionSelector,
         semanticContent: options.semanticSelector,
         noJsSemanticContent: options.noJsSemanticSelector,
+        overlay: options.overlaySelector,
+        overlayTarget: options.protectedSelector,
       },
       forceWebglFailure: options.forceWebglFailure,
+      checkReducedMotion: options.checkReducedMotion,
+      controlRuns: options.controlRuns,
+      browser: options.browserName,
     },
     verdict: { pass: defects.length === 0, defectCount: defects.length },
     defects,
     viewports: viewportReports,
   };
+  const baselineFingerprint = controlFingerprint(result);
+  result.controls = {
+    checked: options.controlRuns > 1,
+    requestedRuns: options.controlRuns,
+    completedRuns: 1,
+    pass: options.controlRuns > 1 ? true : null,
+    baselineFingerprint,
+    runs: [{ run: 1, fingerprint: baselineFingerprint, match: true, sameBuild: true, report: 'report.json' }],
+  };
+  for (let run = 2; run <= options.controlRuns; run += 1) {
+    const relativeReport = `controls/run-${run}/report.json`;
+    const controlResult = await auditTarget({
+      url: options.url,
+      outDir: path.join(options.outDir, 'controls', `run-${run}`),
+      viewports: options.viewports,
+      steps: options.steps,
+      direction: options.direction,
+      adapterPath: options.adapterPath,
+      timeoutMs: options.timeoutMs,
+      delayMs: options.delayMs,
+      primaryActionSelector: options.primaryActionSelector,
+      noJsPrimaryActionSelector: options.noJsPrimaryActionSelector,
+      semanticSelector: options.semanticSelector,
+      noJsSemanticSelector: options.noJsSemanticSelector,
+      overlaySelector: options.overlaySelector,
+      protectedSelector: options.protectedSelector,
+      forceWebglFailure: options.forceWebglFailure,
+      checkReducedMotion: options.checkReducedMotion,
+      controlRuns: 1,
+      browserName: options.browserName,
+      browserType: input.browserType,
+    });
+    const fingerprint = controlFingerprint(controlResult);
+    const sameBuild = stableStringify(controlResult.environment.browser) === stableStringify(result.environment.browser)
+      && stableStringify(controlResult.environment.runtime) === stableStringify(result.environment.runtime)
+      && stableStringify(controlResult.environment.os) === stableStringify(result.environment.os);
+    const match = sameBuild && fingerprint === baselineFingerprint;
+    result.controls.runs.push({ run, fingerprint, match, sameBuild, report: relativeReport });
+    result.controls.completedRuns += 1;
+    if (!match) result.controls.pass = false;
+  }
+  if (result.controls.checked && !result.controls.pass) {
+    result.defects.push({ code: 'CONTROL_DRIFT', viewport: 'all', severity: 'error' });
+  }
+  result.verdict = { pass: result.defects.length === 0, defectCount: result.defects.length };
   await writeJson(path.join(options.outDir, 'report.json'), result);
   await renderHtmlReport(path.join(options.outDir, 'index.html'), result);
   return result;

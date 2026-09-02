@@ -1,0 +1,5 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Colliding overlay fixture</title><style>body{margin:0;font:18px/1.5 system-ui}.nav{position:fixed;inset:0 0 auto;height:88px;background:#16251f;color:white;z-index:4}.protected{position:fixed;top:40px;left:24px;width:280px;padding:20px;background:#ff735c;z-index:3}main{min-height:130vh;padding:220px 32px 32px}</style></head>
+<body><nav class="nav" data-cinetrace-overlay>Persistent navigation</nav><aside class="protected" data-cinetrace-protected>Protected booking message is occluded by navigation.</aside><main><h1>An overlay that hides an important message</h1><p>The explicitly annotated navigation and protected booking message overlap by a meaningful area, which should produce distinct geometric collision evidence.</p><a href="/book">Book the experience</a></main><script>let progress=0;window.cineTraceFixture={setProgress(value){progress=value},readState(){return{progress}}};</script></body>
+</html>

@@ -1,0 +1,5 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Nondeterministic control fixture</title></head>
+<body><main><h1>A route with environmental control drift</h1><p>This route is internally consistent during one traversal but chooses a different build-visible token on every navigation, so consecutive same-build control runs must disagree.</p><a href="/continue">Continue through the route</a><output id="token"></output></main><script>const token=crypto.getRandomValues(new Uint32Array(1))[0];document.querySelector('#token').textContent=String(token);let progress=0;window.cineTraceFixture={setProgress(value){progress=value},readState(){return{progress,token}}};</script></body>
+</html>

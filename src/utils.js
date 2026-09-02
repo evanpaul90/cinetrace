@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 
 export function stableStringify(value) {
   if (value === null || typeof value !== 'object') return JSON.stringify(value);
@@ -9,6 +9,11 @@ export function stableStringify(value) {
 
 export function stateDigest(value) {
   return createHash('sha256').update(stableStringify(value)).digest('hex').slice(0, 16);
+}
+
+export async function fileDigest(path) {
+  const content = await readFile(path);
+  return createHash('sha256').update(content).digest('hex');
 }
 
 export function slug(value) {
