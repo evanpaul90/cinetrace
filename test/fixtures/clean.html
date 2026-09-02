@@ -7,9 +7,11 @@
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; max-width: 100%; overflow-x: clip; }
-    body { min-height: 100vh; background: #13251f; color: #fff6df; font: 18px/1.5 system-ui; }
+    body { min-height: 100vh; background: #222; color: #eee; font: 18px/1.5 Arial, sans-serif; }
     main { width: min(900px, 100%); padding: clamp(24px, 7vw, 90px); }
-    #scene { width: 140px; height: 140px; border-radius: 50%; background: #f4b942; transform: translateX(calc(var(--p, 0) * min(45vw, 480px))); }
+    button { appearance: none; border: 2px solid #eee; border-radius: 0; background: #222; color: #eee; font: inherit; padding: 8px 12px; }
+    button:focus { outline: 2px solid #eee; outline-offset: 2px; }
+    #scene { width: 140px; height: 140px; background: #aaa; transform: translateX(calc(var(--p, 0) * min(45vw, 480px))); }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
   </style>
 </head>
