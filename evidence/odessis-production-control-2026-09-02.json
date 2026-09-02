@@ -5,7 +5,7 @@
   "cinetrace": {
     "version": "0.3.0",
     "commit": "4810a31",
-    "command": "node src/cli.js audit https://odessis.in/ --viewports desktop,mobile --steps 5 --reverse --reduced-motion --control-runs 2 --adapter <project-adapter> --semantic-content 'main, body' --no-js-semantic-content 'main, body' --force-webgl-failure --timeout 60000"
+    "command": "node src/cli.js audit https://odessis.in/ --viewports desktop,mobile --steps 5 --reverse --reduced-motion --control-runs 2 --adapter ./evidence/odessis-adapter.mjs --semantic-content 'main, body' --no-js-semantic-content 'main, body' --force-webgl-failure --timeout 60000"
   },
   "environment": {
     "browser": "chromium 151.0.7922.34",

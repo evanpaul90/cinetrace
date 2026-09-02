@@ -97,7 +97,8 @@ and no-JavaScript semantics and primary actions, keyboard reachability, overflow
 reduced motion, forced WebGL failure and page errors, then repeated the entire audit in a fresh
 same-build control. Both controls produced fingerprint `1273464af6848e6b` under Chromium
 151.0.7922.34 and SwiftShader WebGL2. The machine-readable summary is
-`evidence/odessis-production-control-2026-09-02.json`.
+`evidence/odessis-production-control-2026-09-02.json`; the exact public application adapter used by
+the command is preserved at `evidence/odessis-adapter.mjs`.
 
 CineTrace's reverse, screenshot and control oracles were not weakened. The earlier premature green
 remains invalid evidence; the final result passed only after the target's real readiness and
@@ -108,10 +109,12 @@ determinism defects were corrected.
 - `npm audit --audit-level=moderate`: 0 vulnerabilities
 - `node --check` on every source file: PASS
 - `report.schema.json` JSON syntax: PASS
-- `npm pack --dry-run`: PASS, 10 distributable files, 20.1 kB packed / 71.5 kB unpacked
+- `npm pack --dry-run`: PASS, 10 distributable files, 20.4 kB packed / 72.0 kB unpacked
 - Product-coupling scan over the distributable package payload: no Odessis references
 - Readiness scan: no `networkidle` dependency
 - `git diff --check`: PASS
+- GitHub Actions repeats the full three-engine corpus, dependency audit and package dry run on every
+  push to `main` and every pull request
 
 ## Evidence boundaries
 

@@ -128,6 +128,15 @@ npm test
 
 The test corpus proves native-scroll checkpoint accuracy, bounded readiness with an open streaming response, configurable primary-action and semantic selectors, keyboard reachability, annotated overlay collision, same-build control drift, safe and unsafe forced-WebGL failure paths, reduced-motion mutation behavior, screenshot-collision prevention, configuration validation, true root overflow versus intentionally clipped body decoration, reverse-state drift, and missing semantic fallback. The generic clean corpus runs in Chromium, Firefox and WebKit.
 
+## Production evidence
+
+The repository includes the exact public adapter and a machine-readable summary for the 2 September
+2026 Odessis production control under `evidence/`. That audit covered five checkpoints forward and
+reverse at desktop and phone-sized viewports, repeated the entire run in a fresh same-build control,
+and returned zero defects with matching fingerprint `1273464af6848e6b`. `PROOF.md` records both the
+passing evidence and the earlier premature green result that CineTrace rejected after a longer audit
+crossed a real late-layout mutation.
+
 ## Evidence boundaries
 
 A desktop browser context sized to `390×844` is still a desktop browser at phone dimensions. It is not a physical phone and provides no evidence about mobile hardware, thermal behavior, touch latency or device GPU performance.
