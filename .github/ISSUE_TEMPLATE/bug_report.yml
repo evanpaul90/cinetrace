@@ -1,0 +1,39 @@
+name: Bug report
+description: Report a reproducible CineTrace failure or false verdict.
+title: "[bug] "
+labels: [bug]
+body:
+  - type: textarea
+    id: observed
+    attributes:
+      label: What happened?
+      description: Include the command, exit code and unexpected verdict.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What should have happened?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Link a public fixture or paste the smallest safe example.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      placeholder: CineTrace 0.3.0, Node 22, Chromium 151, macOS arm64
+    validations:
+      required: true
+  - type: checkboxes
+    id: security
+    attributes:
+      label: Security check
+      options:
+        - label: This report does not disclose a vulnerability or private target data.
+          required: true

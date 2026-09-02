@@ -1,0 +1,33 @@
+name: Oracle proposal
+description: Propose a new machine-checkable failure condition.
+title: "[oracle] "
+labels: [enhancement]
+body:
+  - type: textarea
+    id: failure
+    attributes:
+      label: What real failure should CineTrace catch?
+      description: Describe the user-visible or structural failure, not only an implementation idea.
+    validations:
+      required: true
+  - type: textarea
+    id: oracle
+    attributes:
+      label: Proposed oracle
+      description: State the machine-checkable pass/fail condition.
+    validations:
+      required: true
+  - type: textarea
+    id: controls
+    attributes:
+      label: Clean and mutated controls
+      description: Explain how a clean fixture passes and a deliberate mutation fails.
+    validations:
+      required: true
+  - type: textarea
+    id: boundary
+    attributes:
+      label: Evidence boundary
+      description: What must this check not claim to prove?
+    validations:
+      required: true

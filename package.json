@@ -8,14 +8,17 @@
     "scroll-animation",
     "visual-regression",
     "reduced-motion",
-    "progressive-enhancement"
+    "progressive-enhancement",
+    "browser-testing",
+    "web-animation",
+    "cli"
   ],
   "author": "Evan D'Souza",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/evanpaul90/cinetrace.git"
   },
-  "homepage": "https://github.com/evanpaul90/cinetrace#readme",
+  "homepage": "https://evanpaul90.github.io/cinetrace/",
   "bugs": {
     "url": "https://github.com/evanpaul90/cinetrace/issues"
   },
@@ -40,7 +43,8 @@
   ],
   "scripts": {
     "audit": "node ./src/cli.js audit",
-    "test": "node --test ./test/*.test.js"
+    "test": "node --test ./test/*.test.js",
+    "evidence:verify": "node ./scripts/verify-evidence.mjs"
   },
   "dependencies": {
     "playwright": "^1.58.2"
