@@ -2,6 +2,23 @@
   "name": "cinetrace",
   "version": "0.3.0",
   "description": "Deterministic filmstrip audits for scroll- and progress-driven web experiences.",
+  "keywords": [
+    "playwright",
+    "webgl",
+    "scroll-animation",
+    "visual-regression",
+    "reduced-motion",
+    "progressive-enhancement"
+  ],
+  "author": "Evan D'Souza",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evanpaul90/cinetrace.git"
+  },
+  "homepage": "https://github.com/evanpaul90/cinetrace#readme",
+  "bugs": {
+    "url": "https://github.com/evanpaul90/cinetrace/issues"
+  },
   "type": "module",
   "bin": {
     "cinetrace": "./src/cli.js"
@@ -14,6 +31,13 @@
   "engines": {
     "node": ">=22"
   },
+  "files": [
+    "index.js",
+    "src/",
+    "report.schema.json",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "audit": "node ./src/cli.js audit",
     "test": "node --test ./test/*.test.js"

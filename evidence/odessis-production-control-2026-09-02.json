@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-02T07:47:00+05:30",
+  "target": "https://odessis.in/",
+  "cinetrace": {
+    "version": "0.3.0",
+    "commit": "4810a31",
+    "command": "node src/cli.js audit https://odessis.in/ --viewports desktop,mobile --steps 5 --reverse --reduced-motion --control-runs 2 --adapter <project-adapter> --semantic-content 'main, body' --no-js-semantic-content 'main, body' --force-webgl-failure --timeout 60000"
+  },
+  "environment": {
+    "browser": "chromium 151.0.7922.34",
+    "os": "darwin arm64 25.4.0",
+    "node": "v26.0.0",
+    "renderer": "ANGLE SwiftShader WebGL2",
+    "rendererScope": "engine-specific"
+  },
+  "viewports": [
+    {
+      "name": "desktop",
+      "width": 1440,
+      "height": 900,
+      "deviceScaleFactor": 1,
+      "frames": 10
+    },
+    {
+      "name": "mobile",
+      "width": 390,
+      "height": 844,
+      "deviceScaleFactor": 1,
+      "frames": 10
+    }
+  ],
+  "checks": {
+    "overflow": true,
+    "semantics": true,
+    "primaryAction": true,
+    "keyboardReachability": true,
+    "reverseDrift": true,
+    "reducedMotion": true,
+    "semanticFallback": true,
+    "primaryActionFallback": true,
+    "forcedWebglFailure": true,
+    "pageErrors": true
+  },
+  "controls": {
+    "requested": 2,
+    "completed": 2,
+    "pass": true,
+    "run1Fingerprint": "1273464af6848e6b",
+    "run2Fingerprint": "1273464af6848e6b",
+    "sameBuild": true
+  },
+  "decodedRgbaPositiveControl": {
+    "browser": "chromium 145.0.7632.6",
+    "renderer": "ANGLE Metal",
+    "viewport": "960x600@1",
+    "betweenStoaTheatre": "0c984f5af78832a289190396129a3fe61d6e5f5b4c5302ccbe345e69a88cfc25",
+    "tholos": "bba76f9e0fb596d1a948840d63476ea9c216c55e18bbeab75b1f3f2fcc977cc5",
+    "mutatedGrain": "053d4c30468ee65802325011f16ce6951b5ecd7c48f2431925926d38d5737d0c",
+    "mutationDetected": true
+  },
+  "verdict": {
+    "pass": true,
+    "defects": 0
+  },
+  "limits": [
+    "phone dimensions in a desktop browser are not physical-device evidence",
+    "byte identity is not claimed across browsers, GPUs, DPRs, viewports or color profiles",
+    "automated keyboard and reduced-motion checks are not WCAG certification"
+  ]
+}

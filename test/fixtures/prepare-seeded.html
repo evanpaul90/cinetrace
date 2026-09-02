@@ -5,9 +5,11 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Prepared document-start fixture</title>
   <style>
-    body { margin: 0; min-height: 180vh; font: 18px/1.5 system-ui; background: #f5efe2; color: #152626; }
+    body { margin: 0; min-height: 180vh; font: 18px/1.5 Arial, sans-serif; background: #f2f2f2; color: #111; }
     main { max-width: 42rem; margin: 0 auto; padding: 4rem 1rem; }
     #seed { width: 6rem; height: 6rem; margin: 2rem 0; border-radius: 50%; background: var(--seed-color); }
+    a { color: #111; }
+    a:focus-visible { outline: 2px solid #111; outline-offset: 2px; }
   </style>
 </head>
 <body>
@@ -23,7 +25,7 @@
     const preparedAtDocumentStart = window.__cinetracePrepared === true;
     document.documentElement.dataset.preparedAtDocumentStart = String(preparedAtDocumentStart);
     document.documentElement.dataset.bootSeed = String(seed);
-    document.documentElement.style.setProperty('--seed-color', `hsl(${Math.floor(seed * 360)} 55% 48%)`);
+    document.documentElement.style.setProperty('--seed-color', seed < 0.5 ? '#555' : '#aaa');
     if (!preparedAtDocumentStart && matchMedia('(prefers-reduced-motion: reduce)').matches) {
       document.querySelector('#seed').animate(
         [{ transform: 'translateX(0)' }, { transform: 'translateX(120px)' }],

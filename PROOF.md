@@ -4,7 +4,10 @@ Verified locally on 2 September 2026 against CineTrace 0.3.0. This record contai
 
 ## Release-bar mutation corpus
 
-`npm test` completed 30 tests with 30 passes and 0 failures in 16.01 seconds.
+Three consecutive `npm test` runs completed 90 tests with 90 passes and 0 failures. The
+document-start preparation control was also repeated 30 times after removing cross-run colour and
+font raster variability; all 30 runs produced the same fingerprint
+`67ee8cbecdf52f33`.
 
 The corpus proves deliberate failures for:
 
@@ -68,7 +71,7 @@ Result: PASS, 0 defects, 15 evenly spaced states, 30 forward/reverse frames per 
 
 The generated schema-2.0.0 report records browser engine and version, OS platform/architecture/release, Node runtime, viewport dimensions and device scale, plus honestly nullable WebGL API/vendor/renderer fields. The clean report is validated against `report.schema.json` in the automated corpus.
 
-## Production readiness diagnosis
+## Production release proof
 
 The earlier CineTrace 0.2.2 three-state pass against `https://odessis.in/` is not retained as release evidence. A 15-state 0.3.0 control run showed that the short audit had completed while the fixed boot canvas still covered the application and before the asynchronous scene build replaced provisional chapter heights with final weighted heights.
 
@@ -76,15 +79,37 @@ The observed desktop document changed from 8784px to 8073px; mobile changed from
 
 A post-diagnosis three-state production rerun completed in 11.8 seconds with zero reported defects and only the provisional heights. Its final screenshot still showed the boot canvas, proving why the short green result is insufficient. A separate desktop probe waited until the boot element was absent; readiness took 56.95 seconds in that headless run, after which five forward and five reverse checkpoints all retained the final 8073px height and matching scroll progress.
 
-Production release remains on hold until the target supplies final scroll geometry synchronously and/or the audit uses a project readiness adapter that waits for the public application-ready signal and boot removal. CineTrace's reverse oracle was not weakened.
+Odessis PR 8 subsequently moved the final weighted chapter geometry into first-paint CSS. Its live
+boot-geometry oracle now holds desktop at 8073px and mobile at 7571px before readiness, at readiness
+and after the boot element leaves the DOM.
+
+Odessis PR 9 added an inactive-by-default fixed-time capture surface and fixed-seed atmosphere
+construction. A separate decoded-RGBA production oracle passed across two fresh contexts in pinned
+Chromium 145.0.7632.6 with ANGLE Metal:
+
+- between Stoa and Theatre: `0c984f5af78832a289190396129a3fe61d6e5f5b4c5302ccbe345e69a88cfc25` in both contexts;
+- Tholos: `bba76f9e0fb596d1a948840d63476ea9c216c55e18bbeab75b1f3f2fcc977cc5` in both contexts;
+- deliberate film-grain mutation: `053d4c30468ee65802325011f16ce6951b5ecd7c48f2431925926d38d5737d0c`, correctly different.
+
+The complete CineTrace production command then passed against `https://odessis.in/` with zero
+defects. It captured five checkpoints forward and reverse at 1440x900 and 390x844, verified rendered
+and no-JavaScript semantics and primary actions, keyboard reachability, overflow, reverse state,
+reduced motion, forced WebGL failure and page errors, then repeated the entire audit in a fresh
+same-build control. Both controls produced fingerprint `1273464af6848e6b` under Chromium
+151.0.7922.34 and SwiftShader WebGL2. The machine-readable summary is
+`evidence/odessis-production-control-2026-09-02.json`.
+
+CineTrace's reverse, screenshot and control oracles were not weakened. The earlier premature green
+remains invalid evidence; the final result passed only after the target's real readiness and
+determinism defects were corrected.
 
 ## Package checks
 
 - `npm audit --audit-level=moderate`: 0 vulnerabilities
 - `node --check` on every source file: PASS
 - `report.schema.json` JSON syntax: PASS
-- `npm pack --dry-run`: PASS, 11 distributable files
-- Product-coupling scan over source, tests, README, schema and package metadata: no Odessis references
+- `npm pack --dry-run`: PASS, 10 distributable files, 20.1 kB packed / 71.5 kB unpacked
+- Product-coupling scan over the distributable package payload: no Odessis references
 - Readiness scan: no `networkidle` dependency
 - `git diff --check`: PASS
 
